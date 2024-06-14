@@ -10,27 +10,41 @@ public class AccountManager {
 
 
     private byte[] salt;
+    DBConnection dbCon;
+    private Map<String, User> userDatabase ;
 
-    private Map<String, User> userDatabase = new HashMap<>();
+    public AccountManager(String database){
 
-    public void registerUser(String username, String password) throws Exception {
+        dbCon = new DBConnection(database);
+
+        userDatabase = dbCon.getUsernamePasswordMap();
+    }
+
+    public boolean registerUser(String username, String password) throws NoSuchAlgorithmException {
         if(userDatabase.containsKey(username)){
-            throw new Exception("Username already exists.");
+            return false;
         }
+
+        dbCon.addUser(username,password);
+
         this.salt = generateSalt();
         String hashedPassword = passwordToHash(password,salt);
         User user = new User(username,hashedPassword);
         user.setSalt(salt);
         userDatabase.put(username,user);
+
+        return true;
     }
 
 
     public boolean authenticateUser(String username,String password) throws Exception {
         User user = userDatabase.get(username);
+
         if(user == null){
             throw new Exception("User not found.");
         }
-        return passwordToHash(password,user.getSalt()) == user.getHashedPassword();
+
+        return passwordToHash(password,user.getSalt()).equals(user.getHashedPassword()) ;
     }
 
     public void changePassword(String username, String newPassword) throws Exception {

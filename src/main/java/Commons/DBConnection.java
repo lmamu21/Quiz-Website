@@ -1,6 +1,9 @@
 package Commons;
 
+import java.security.NoSuchAlgorithmException;
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBConnection {
     private Connection con;
@@ -116,6 +119,24 @@ public class DBConnection {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public Map<String,User> getUsernamePasswordMap(){
+        Map<String,User> mp = new HashMap<String,User>();
+
+        try {
+            this.resultSet = stmt.executeQuery("SELECT * FROM users");
+            while(resultSet.next()){
+                String username = resultSet.getString(1);
+                String password = resultSet.getString(2);
+
+                mp.put(username, new User(username,password));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return mp;
     }
 }
 

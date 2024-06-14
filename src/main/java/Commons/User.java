@@ -13,7 +13,7 @@ public class User {
 
     private byte[] salt;
 
-    public User(String username, String password) throws NoSuchAlgorithmException {
+    public User(String username, String password) {
         this.username = username;
         this.hashedPassword =  password;
 
@@ -32,7 +32,7 @@ public class User {
         return hashedPassword;
     }
 
-    public void setPassword(String password) throws NoSuchAlgorithmException {
+    public void setPassword(String password)  {
         this.hashedPassword = password;
     }
 
