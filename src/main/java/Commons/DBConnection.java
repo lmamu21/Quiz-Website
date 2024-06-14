@@ -117,5 +117,94 @@ public class DBConnection {
         }
         return result;
     }
+
+    /**
+     *
+     * @param sender
+     * @param receiver
+     */
+    public boolean sendFriendRequest(String sender, String receiver){
+        String query = String.format("INSERT INTO friends VALUES (\'%s\', \'%s\', \'%s\')", getID(sender), getID(receiver), "pending");
+        int result = 0;
+        boolean senderExists = accountExists(sender);
+        boolean receiverExists = accountExists(receiver);
+        if(senderExists && receiverExists) {
+            try {
+                result = stmt.executeUpdate(query);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            System.out.println("One of the provided accounts does not exists");
+        }
+        return result == 1;
+    }
+
+    public boolean acceptFriendRequest(String accepter, String requester){
+        boolean requestExists = false;
+        String query = String.format("SELECT * FROM friends WHERE user_id = \'%s\' AND friend_id = \'%s\' AND friendship_status = \'pending\'", getID(requester), getID(accepter));
+        try {
+            resultSet = stmt.executeQuery(query);
+            requestExists = resultSet.next();
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        if(!requestExists){
+            return false;
+        }
+
+        String updateQuery = String.format("UPDATE friends SET friendship_status = \'friends\' WHERE user_id = \'%s\' and friend_id = \'%s\'", getID(requester), getID(accepter), "friends");
+        try{
+            int rowsAffected = stmt.executeUpdate(updateQuery);
+            if (rowsAffected == 0){
+                return false;
+            }
+        } catch (SQLException e){
+            e.printStackTrace();
+        }
+        updateQuery = String.format("INSERT INTO friends VALUES (\'%s\', \'%s\', \'%s\')", getID(accepter), getID(requester), "friends");
+        try{
+            int rowsAffected = stmt.executeUpdate(updateQuery);
+            if (rowsAffected == 0){
+                return false;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
+
+    private boolean accountExists(String username){
+        String query = String.format("SELECT * FROM users WHERE username = \'%s\'", username);
+        try{
+            resultSet = stmt.executeQuery(query);
+            if (resultSet.next()){
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    private String getID(String username){
+        String query = String.format("SELECT user_id FROM users WHERE username = \'%s\'", username);
+        String result = "";
+        try{
+            resultSet = stmt.executeQuery(query);
+            resultSet.next();
+            result = String.valueOf(resultSet.getInt("user_id"));
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        DBConnection conn = new DBConnection("quiz_test");
+        conn.acceptFriendRequest("gio", "nino" );
+        conn.acceptFriendRequest( "andria", "luka");
+    }
 }
 
