@@ -7,66 +7,34 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountManager {
-
-
     private byte[] salt;
     DBConnection dbCon;
-    private Map<String, User> userDatabase ;
 
     public AccountManager(String database){
-
         dbCon = new DBConnection(database);
-
-        userDatabase = dbCon.getUsernamePasswordMap();
     }
 
     public boolean registerUser(String username, String password) throws NoSuchAlgorithmException {
-        if(userDatabase.containsKey(username)){
-            return false;
-        }
-
-        dbCon.addUser(username,password);
-
         this.salt = generateSalt();
         String hashedPassword = passwordToHash(password,salt);
-        User user = new User(username,hashedPassword);
-        user.setSalt(salt);
-        userDatabase.put(username,user);
-
-        return true;
+        return  dbCon.addUser(username, hashedPassword, hexToString(salt));
     }
 
 
     public boolean authenticateUser(String username,String password) throws Exception {
-        User user = userDatabase.get(username);
+        byte[] salt = hexToArray(dbCon.getSalt(username));
 
-        if(user == null){
-            throw new Exception("User not found.");
-        }
+        String hashedPassword = dbCon.getPasswordHash(username);
 
-        return passwordToHash(password,user.getSalt()).equals(user.getHashedPassword()) ;
+        return passwordToHash(password, salt).equals(hashedPassword);
     }
 
     public void changePassword(String username, String newPassword) throws Exception {
-        User user = userDatabase.get(username);
-
-        if (user == null) {
-            throw new Exception("User not found.");
-        }
-
-        user.setPassword(passwordToHash(newPassword,user.getSalt()));
+        // TODO: user should enter current password and new password and it should be validated
+        byte[] salt = generateSalt();
+        String newPasswordHash = passwordToHash(newPassword, salt);
+        dbCon.changePassword(username, newPassword, hexToString(salt));
     }
-
-    public User getUser(String username) throws Exception {
-        User user = userDatabase.get(username);
-
-        if (user == null) {
-            throw new Exception("User not found.");
-        }
-
-        return user;
-    }
-
 
     private static String passwordToHash(String password,byte[] salt) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA");
@@ -74,7 +42,6 @@ public class AccountManager {
         md.update(password.getBytes(StandardCharsets.UTF_8));
         byte[] digest = md.digest();
         return hexToString(digest);
-
     }
 
     private static String hexToString(byte[] bytes) {
@@ -94,5 +61,14 @@ public class AccountManager {
         random.nextBytes(salt);
         return salt;
     }
+
+    private byte[] hexToArray(String hex) {
+        byte[] result = new byte[hex.length()/2];
+        for (int i=0; i<hex.length(); i+=2) {
+            result[i/2] = (byte) Integer.parseInt(hex.substring(i, i+2), 16);
+        }
+        return result;
+    }
+
 
 }
