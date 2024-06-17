@@ -1,6 +1,7 @@
 package Commons;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class DBConnection {
     private ResultSet resultSet;
     private String baseURL = "jdbc:mysql://localhost:3306/";
     private String user = "root";
-    private String password = "admin";
+    private String password = "root1234";
     public DBConnection(String database) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -146,5 +147,155 @@ public class DBConnection {
         }
        return result;
     }
+
+    public int getUserId(String username){
+        String query = String.format("SELECT user_id FROM users WHERE username  = \'%s\' " , username);
+        int result = -1;
+        try {
+            this.resultSet = stmt.executeQuery(query);
+
+            if(this.resultSet.next()){
+                // means that there was entry with provided username
+                result = resultSet.getInt(1);
+            }else {
+                throw new IllegalArgumentException();
+            }
+        }catch(IllegalArgumentException e) {
+            System.out.println("ERROR: Could not find entry with username \'" + username + "\'");
+            e.printStackTrace();
+        }catch(Exception e){
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getUsername(int userId){
+        String query = String.format("SELECT username FROM users WHERE user_id  = \'%d\' " , userId);
+        String result = "";
+        try {
+            this.resultSet = stmt.executeQuery(query);
+
+            if(this.resultSet.next()){
+                // means that there was entry with provided userid
+                result = resultSet.getString(1);
+            }else {
+                throw new IllegalArgumentException();
+            }
+        }catch(IllegalArgumentException e) {
+            System.out.println("ERROR: Could not find entry with user_id \'" + userId + "\'");
+            e.printStackTrace();
+        }catch(Exception e){
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ArrayList<String> getFriendsNames(String username){
+        int id = getUserId(username);
+        String query = String.format("SELECT friend_id , status FROM users WHERE user_id  = \'%d\' " , id);
+        ArrayList<String> result = new ArrayList<String>();
+        try {
+            this.resultSet = stmt.executeQuery(query);
+            while(resultSet.next()){
+                if(resultSet.getString(2).equals("active"))
+                    result.add(getUsername(resultSet.getInt(1)));
+            }
+        }catch(Exception e) {
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ArrayList<String> getFriendRequestUsernames(String username){
+        int id = getUserId(username);
+        String query = String.format("SELECT user_id , status FROM users WHERE friend_id  = \'%d\' " , id);
+        ArrayList<String> result = new ArrayList<String>();
+        try {
+            this.resultSet = stmt.executeQuery(query);
+            while(resultSet.next()){
+                if(resultSet.getString(2) .equals("pending"))
+                    result.add(getUsername(resultSet.getInt(1)));
+            }
+        }catch(Exception e) {
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public String getQuizName(int id){
+        String query = String.format("SELECT quiz_name FROM quizzes WHERE quiz_id  = \'%d\' " , id);
+        String result = "";
+        try {
+            this.resultSet = stmt.executeQuery(query);
+            if(this.resultSet.next()){
+                // means that there was entry with provided quiz_id
+                result = resultSet.getString(1);
+            }else {
+                throw new IllegalArgumentException();
+            }
+        }catch(IllegalArgumentException e) {
+            System.out.println("ERROR: Could not find entry with quiz_id \'" + id + "\'");
+            e.printStackTrace();
+        }catch(Exception e){
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ArrayList<Integer> getUsersMadeQuizIds(String username){
+        int id = getUserId(username);
+        String query = String.format("SELECT quiz_id FROM quizzes WHERE user_id  = \'%d\' " , id);
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        try {
+            this.resultSet = stmt.executeQuery(query);
+            while(resultSet.next()){
+                result.add(resultSet.getInt(1));
+            }
+        }catch(Exception e) {
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ArrayList<Integer> getRecentlyAddedQuizzes(int max_count){
+        String query = String.format("SELECT quiz_id  FROM quizzes ORDER BY creation_date ");
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        try {
+            this.resultSet = stmt.executeQuery(query);
+            while(resultSet.next() && max_count > 0){
+                result.add(resultSet.getInt(1));
+                max_count--;
+            }
+        }catch(Exception e) {
+            System.out.println(" ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public ArrayList<Integer> getPopularQuizzes(int maxCount){
+        String query = String.format("SELECT quiz_id FROM quizzes ORDER BY write_count DESC");
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        try {
+            this.resultSet = stmt.executeQuery(query);
+            while(resultSet.next() && maxCount > 0){
+                result.add(resultSet.getInt(1));
+                maxCount--;
+            }
+        }catch(Exception e) {
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+
 }
 

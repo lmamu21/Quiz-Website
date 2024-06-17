@@ -3,6 +3,7 @@ package WebServlets;
 
 import Commons.AccountManager;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletException;
@@ -45,6 +46,13 @@ public class LoginServlet extends HttpServlet {
             // wrong password;
             //TODO : writeResponse;
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/login/index.jsp");
+        dispatcher.forward(request, response);
     }
 
 }

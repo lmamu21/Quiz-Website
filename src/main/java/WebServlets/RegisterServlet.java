@@ -3,6 +3,7 @@ package WebServlets;
 
 import Commons.AccountManager;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -15,15 +16,17 @@ import java.security.NoSuchAlgorithmException;
 @WebServlet("/Register")
 public class RegisterServlet extends HttpServlet {
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-        resp.setContentType("text/html");
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse res)
+            throws ServletException, IOException{
+        res.setContentType("text/html");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
         AccountManager manager = (AccountManager) getServletContext().getAttribute("AccountManager");
 
         boolean ans = false;
-        PrintWriter writer = resp.getWriter();
+        PrintWriter writer = res.getWriter();
 
         try {
             ans = manager.registerUser(username,password);
@@ -39,6 +42,13 @@ public class RegisterServlet extends HttpServlet {
             writer.write("<h1>username already exists  :((((((((( </h1>");
             // username already exists;
         }
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/Register/register.jsp");
+        dispatcher.forward(request, response);
     }
 
 
