@@ -1,8 +1,14 @@
 package Commons;
 
-import java.security.NoSuchAlgorithmException;
+import Commons.Message.ChallengeMessage;
+import Commons.Message.FriendRequestMessage;
+import Commons.Message.Message;
+import Commons.Message.NoteMessage;
+
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class DBConnection {
@@ -138,5 +144,182 @@ public class DBConnection {
 
         return mp;
     }
+
+    public boolean sendMessage(Message message) {
+        PreparedStatement statement = null;
+        try {
+            int senderId = message.getSender();
+            int recipientId = message.getRecipient();
+            String messageType = message.getClass().getSimpleName();
+
+            switch (messageType) {
+                case "FriendRequestMessage":
+                    FriendRequestMessage friendRequestMessage = (FriendRequestMessage) message;
+                    statement = con.prepareStatement("INSERT INTO messages (SenderId, RecipientId, MessageType, FriendRequestStatus) VALUES (?, ?, ?, 'pending')");
+                    statement.setInt(1, senderId);
+                    statement.setInt(2, recipientId);
+                    statement.setString(3, messageType);
+                    break;
+                case "ChallengeMessage":
+                    ChallengeMessage challengeMessage = (ChallengeMessage) message;
+                    statement = con.prepareStatement("INSERT INTO messages (SenderId, RecipientId, MessageType, QuizLink, ChallengersBestScore) VALUES (?, ?, ?, ?, ?)");
+                    statement.setInt(1, senderId);
+                    statement.setInt(2, recipientId);
+                    statement.setString(3, messageType);
+                    statement.setString(4, challengeMessage.getQuizLink());
+                    statement.setInt(5, challengeMessage.getBestScore());
+                    break;
+                case "NoteMessage":
+                    NoteMessage noteMessage = (NoteMessage) message;
+                    statement = con.prepareStatement("INSERT INTO messages (SenderId, RecipientId, MessageType, NoteText) VALUES (?, ?, ?, ?)");
+                    statement.setInt(1, senderId);
+                    statement.setInt(2, recipientId);
+                    statement.setString(3, messageType);
+                    statement.setString(4, noteMessage.getContent());
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid message type: " + messageType);
+            }
+
+            int rowsInserted = statement.executeUpdate();
+            return rowsInserted > 0;
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+//    public List<Message> getUserMessages(int userId){
+//        List<Message> messages = new ArrayList<>();
+//        PreparedStatement statement = null;
+//        ResultSet rs = null;
+//        try{
+//            String query ="SELECT * from messages Where RecipientId is ?";
+//            statement = con.prepareStatement(query);
+//            statement.setInt(1,userId);
+//            rs = statement.executeQuery();
+//            while(rs.next()){
+//                int messageId = resultSet.getInt(1);
+//                int senderId = resultSet.getInt(2);
+//                String messageType = resultSet.getString(3);
+//                Timestamp timestamp = resultSet.getTimestamp(4);
+//
+//
+//
+//
+//                switch (messageType){
+//                    case "FriendRequest":
+//                        String friendRequestStatus = resultSet.getString("FriendRequestStatus");
+//                        messages.add(new FriendRequestMessage(messageId,senderId,userId,timestamp,friendRequestStatus));
+//                        break;
+//                    case "NoteMessage":
+//                        String messageContext = resultSet.getString("NoteText");
+//                        messages.add(new NoteMessage(messageId,senderId,userId,timestamp,messageContext));
+//                        break;
+//                    case "ChallengeMessage":
+//                        String quizLink = resultSet.getString("QuizLink");
+//                        int bestScore = resultSet.getInt("ChallangerBestScore");
+//                        messages.add(new ChallengeMessage(messageId,senderId,userId,timestamp,quizLink,bestScore));
+//                        break;
+//                    default:
+//                        throw new IllegalArgumentException("Invalid message type: " + messageType);
+//
+//
+//                }
+//
+//            }
+//
+//
+//
+//        }catch (SQLException e){
+//            e.printStackTrace();
+//        }finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//                if (statement != null) {
+//                    statement.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return messages;
+//    }
+
+    public List<FriendRequestMessage> getFriendRequestMessages(int userId) {
+        List<FriendRequestMessage> messages = new ArrayList<>();
+        String query = "SELECT * from messages Where RecipientId = ? AND MessageType = 'FriendRequest'";
+        try (PreparedStatement statement = con.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    int messageId = rs.getInt(1);
+                    int senderId = rs.getInt(2);
+                    Timestamp timestamp = rs.getTimestamp(4);
+                    String friendRequestStatus = rs.getString("FriendRequestStatus");
+                    messages.add(new FriendRequestMessage(messageId, senderId, userId, timestamp, friendRequestStatus));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return messages;
+    }
+
+    public List<ChallengeMessage> getChallengeMessages(int userId) {
+        List<ChallengeMessage> messages = new ArrayList<>();
+        String query = "SELECT * from messages Where RecipientId = ? AND MessageType = 'ChallengeMessage'";
+        try (PreparedStatement statement = con.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    int messageId = rs.getInt(1);
+                    int senderId = rs.getInt(2);
+                    Timestamp timestamp = rs.getTimestamp(4);
+                    String quizLink = rs.getString("QuizLink");
+                    int bestScore = rs.getInt("ChallangerBestScore");
+                    messages.add(new ChallengeMessage(messageId, senderId, userId, timestamp, quizLink, bestScore));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return messages;
+    }
+
+    public List<NoteMessage> getNoteMessages(int userId) {
+        List<NoteMessage> messages = new ArrayList<>();
+        String query = "SELECT * from messages Where RecipientId = ? AND MessageType = 'NoteMessage'";
+        try (PreparedStatement statement = con.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    int messageId = rs.getInt(1);
+                    int senderId = rs.getInt(2);
+                    Timestamp timestamp = rs.getTimestamp(4);
+                    String messageContent = rs.getString("NoteText");
+                    messages.add(new NoteMessage(messageId, senderId, userId, timestamp, messageContent));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return messages;
+    }
 }
+
+
 
