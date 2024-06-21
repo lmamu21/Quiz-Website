@@ -11,7 +11,7 @@ public class DBConnection {
     private ResultSet resultSet;
     private String baseURL = "jdbc:mysql://localhost:3306/";
     private String user = "root";
-    private String password = "root1234";
+    private String password = "admin";
     public DBConnection(String database) {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -57,7 +57,7 @@ public class DBConnection {
      * @param username - username of the user
      * @return hash value of password
      */
-    public String getPasswordHash(String username) {
+    public String getPasswordHash(String username) throws IllegalArgumentException {
         String query = String.format("SELECT password_hashed FROM users WHERE username = \'%s\'", username);
         String result = "";
         try {
@@ -70,9 +70,9 @@ public class DBConnection {
                 throw new IllegalArgumentException();
             }
         }catch(IllegalArgumentException e) {
-            System.out.println("ERROR: Could not find entry with username \'" + username + "\'");
-           e.printStackTrace();
-        }catch(Exception e){
+            e.printStackTrace();
+            throw new IllegalArgumentException();
+        }catch(SQLException e){
             System.out.println("ERROR: SQL connection error");
             e.printStackTrace();
         }
@@ -126,7 +126,7 @@ public class DBConnection {
      * @param username username of
      * @return
      */
-    public String getSalt(String username) {
+    public String getSalt(String username) throws IllegalArgumentException {
         String query = String.format("SELECT salt FROM users WHERE username = \'%s\'", username);
         String result = "";
         try {
@@ -139,9 +139,9 @@ public class DBConnection {
                 throw new IllegalArgumentException();
             }
         }catch(IllegalArgumentException e) {
-            System.out.println("ERROR: Could not find entry with username \'" + username + "\'");
             e.printStackTrace();
-        }catch(Exception e){
+            throw new IllegalArgumentException();
+        }catch(SQLException e){
             System.out.println("ERROR: SQL connection error");
             e.printStackTrace();
         }

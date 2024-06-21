@@ -12,6 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Homepage</title>
+    <link rel="stylesheet" href="homepage/homepage.css">
     <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
