@@ -17,11 +17,11 @@ public class LogoutServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException{
-
+        System.out.println("here");
         HttpSession session = req.getSession();
         session.setAttribute("loginStatus",null);
-
-       res.sendRedirect("/Quiz-Website/Login");
+        session.setAttribute("username",null);
+       res.sendRedirect("/Quiz-Web/Login");
     }
 
 }
