@@ -1,14 +1,12 @@
 package WebServlets;
-
-
 import Commons.AccountManager;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
@@ -31,24 +29,26 @@ public class RegisterServlet extends HttpServlet {
         try {
             ans = manager.registerUser(username,password);
         } catch (NoSuchAlgorithmException e) {
-            // could not hash the string returning no such algorithm exception
             throw new RuntimeException(e);
         }
-
+        HttpSession session = req.getSession();
+        String registerStatus = "";
         if(ans){
-            writer.write("<h1>hello registered  successfully</h1>");
-            // registered user successfully;
+            registerStatus = "registered";
+            session.setAttribute("registerStatus",registerStatus);
+            res.sendRedirect("/Quiz-Web/Homepage");
         }else {
-            writer.write("<h1>username already exists  :((((((((( </h1>");
-            // username already exists;
+            registerStatus = "username already exists";
+            session.setAttribute("registerStatus",registerStatus);
+            res.sendRedirect("/Quiz-Web/Register");
         }
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/Register/register.jsp");
-        dispatcher.forward(request, response);
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/Register/register.jsp");
+        dispatcher.forward(req, res);
     }
 
 
