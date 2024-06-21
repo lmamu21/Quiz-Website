@@ -16,7 +16,19 @@
     <link rel="stylesheet" href="homepage.css">
 </head>
 <body>
+    <header>
+        <%
+            HttpSession sess = request.getSession();
+        %>
+        <div>
+            <h2> user : <%= (String) sess.getAttribute("username")%></h2>
+        </div>
+        <form action="Logout" method="post">
+            <button type="submit" class="btn ">Logout</button>
+        </form>
+    </header>
     <div class="wrapper">
+
         <div class="sidebar left">
             <div class="popular quizzes">
                 <div class="border-title">Popular quizzes</div>
