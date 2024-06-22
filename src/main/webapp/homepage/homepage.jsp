@@ -21,7 +21,7 @@
             HttpSession sess = request.getSession();
         %>
         <div>
-            <h2> user : <%= (String) sess.getAttribute("username")%></h2>
+            <p> user : <%= (String) sess.getAttribute("username")%></p>
         </div>
         <form action="Logout" method="post">
             <button type="submit" class="btn ">Logout</button>
