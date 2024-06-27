@@ -1,6 +1,8 @@
 package Commons;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DBConnection {
     private Connection con;
@@ -22,18 +24,18 @@ public class DBConnection {
     }
 
     /**
-     *
-     * @param username - username of user
+     * @param username      - username of user
      * @param password_hash - hash value of password, calculated by SHA-1 algorithm (3rd assignment algo)
+     * @param salt
      * @return boolean value - whether entry was inserted into the database
      */
-    public boolean addUser(String username, String password_hash){
+    public boolean addUser(String username, String password_hash, String salt){
         int result = 0;
         StringBuilder builder = new StringBuilder();
         builder.append("INSERT INTO users");
-        builder.append(" (username, password_hashed) ");
+        builder.append(" (username, password_hashed, salt) ");
         builder.append(" VALUES ");
-        builder.append(String.format("(\'%s\', \'%s\')", username, password_hash));
+        builder.append(String.format("(\'%s\', \'%s\', \'%s\')", username, password_hash, salt));
         try{
             String query = builder.toString();
             result = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
@@ -77,13 +79,13 @@ public class DBConnection {
     }
 
     /**
-     *
-     * @param username - username of the user
+     * @param username    - username of the user
      * @param newPassword - new hashed password
+     * @param salt
      * @return boolean - whether entry was updated
      */
-    public boolean changePassword(String username, String newPassword){
-        String query = String.format("UPDATE users SET password_hashed = \'%s\' WHERE username = \'%s\'", newPassword, username);
+    public boolean changePassword(String username, String newPassword, String salt){
+        String query = String.format("UPDATE users SET password_hashed = \'%s\', salt = \'%s\' WHERE username = \'%s\'", newPassword, salt, username);
         try{
             int result = stmt.executeUpdate(query);
             if(result==0){
@@ -205,6 +207,33 @@ public class DBConnection {
         DBConnection conn = new DBConnection("quiz_test");
         conn.acceptFriendRequest("gio", "nino" );
         conn.acceptFriendRequest( "andria", "luka");
+    }
+
+    /**
+     *
+     * @param username username of
+     * @return
+     */
+    public String getSalt(String username) {
+        String query = String.format("SELECT salt FROM users WHERE username = \'%s\'", username);
+        String result = "";
+        try {
+            this.resultSet = stmt.executeQuery(query);
+
+            if(this.resultSet.next()){
+                // means that there was entry with provided username
+                result = resultSet.getString(1);
+            }else {
+                throw new IllegalArgumentException();
+            }
+        }catch(IllegalArgumentException e) {
+            System.out.println("ERROR: Could not find entry with username \'" + username + "\'");
+            e.printStackTrace();
+        }catch(Exception e){
+            System.out.println("ERROR: SQL connection error");
+            e.printStackTrace();
+        }
+       return result;
     }
 }
 
