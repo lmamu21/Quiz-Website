@@ -21,7 +21,7 @@ public class Quiz {
 //    to submit the answer, then display another question.
 //    Immediate Correction — For multiple page quizzes, this setting determines whether the user will receive immediate
 //    feedback on an answer, or if the quiz will only be graded once all the questions have been seen and responded to.
-    private enum QuizOptions {
+    enum QuizOptions {
         RANDOM_QUESTIONS,
         ONE_PAGE,
         MULTIPLE_PAGES,
