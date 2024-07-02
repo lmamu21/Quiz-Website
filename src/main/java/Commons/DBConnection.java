@@ -31,6 +31,8 @@ public class DBConnection {
      * @return boolean value - whether entry was inserted into the database
      */
     public boolean addUser(String username, String password_hash, String salt) {
+        System.out.println("asked to add user " + username)
+        ;
         int result = 0;
         StringBuilder builder = new StringBuilder();
         builder.append("INSERT INTO users");
@@ -39,6 +41,7 @@ public class DBConnection {
         builder.append(String.format("(\'%s\', \'%s\', \'%s\')", username, password_hash, salt));
         try {
             String query = builder.toString();
+            System.out.println("result: " + query);
             result = stmt.executeUpdate(query, Statement.RETURN_GENERATED_KEYS);
             if (result == 0) {
                 throw new IllegalArgumentException();

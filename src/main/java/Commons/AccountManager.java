@@ -17,6 +17,8 @@ public class AccountManager {
     public boolean registerUser(String username, String password) throws NoSuchAlgorithmException {
         this.salt = generateSalt();
         String hashedPassword = passwordToHash(password,salt);
+        String saltString = hexToString(salt);
+        System.out.println(saltString);
         return  dbCon.addUser(username, hashedPassword, hexToString(salt));
     }
 

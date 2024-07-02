@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>#სახელი</title>
-    <link rel="stylesheet" href="register.css">
+    <link rel="stylesheet" href="register/register.css">
 </head>
 <body>
 <div class="parent-container">
@@ -17,7 +17,7 @@
             <input name="password" type="password" placeholder="Enter your Password" required>
             <input name="repeat-password" type="password" placeholder="Repeat your Password" required>
 <!--            <button type="submit" class="btn register-sbt">Login</button>-->
-            <button type="button" class="btn register-btn">Create Account</button>
+            <button type="submit" class="btn register-btn">Create Account</button>
         </form>
     </div>
 </div>
