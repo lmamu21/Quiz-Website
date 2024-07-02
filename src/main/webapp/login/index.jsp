@@ -18,7 +18,7 @@
             <input name="username" type="text" placeholder="username" required>
             <input name="password" type="password" placeholder="password" required>
             <button type="submit" class="btn login-btn">Login</button>
-            <button type="button" class="btn create-btn">Create Account</button>
+            <button type="button" class="btn create-btn"><a href="/register">Create account</a></button>
         </form>
     </div>
 </div>

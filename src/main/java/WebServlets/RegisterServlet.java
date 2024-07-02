@@ -3,6 +3,7 @@ package WebServlets;
 
 import Commons.AccountManager;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 
-@WebServlet("/Register")
+@WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -39,6 +40,11 @@ public class RegisterServlet extends HttpServlet {
             writer.write("<h1>username already exists  :((((((((( </h1>");
             // username already exists;
         }
+    }
+
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        RequestDispatcher dispatcher = req.getRequestDispatcher("/register/register.jsp");
+        dispatcher.forward(req, resp);
     }
 
 
