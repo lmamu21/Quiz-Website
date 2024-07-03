@@ -21,7 +21,7 @@ public class LogoutServlet extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("loginStatus",null);
         session.setAttribute("username",null);
-       res.sendRedirect("/Quiz-Web/Login");
+       res.sendRedirect("/login");
     }
 
 }

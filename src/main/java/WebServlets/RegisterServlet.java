@@ -20,8 +20,18 @@ public class RegisterServlet extends HttpServlet {
         res.setContentType("text/html");
         String username = req.getParameter("username");
         String password = req.getParameter("password");
-
+        String repeatPassword = req.getParameter("repeat-password");
         AccountManager manager = (AccountManager) getServletContext().getAttribute("AccountManager");
+
+        HttpSession session = req.getSession();
+        String registerStatus = "";
+
+
+        if(!password.equals(repeatPassword)){
+            session.setAttribute("registerStatus", "no match");
+            res.sendRedirect("/register");
+            return;
+        }
 
         boolean ans = false;
         PrintWriter writer = res.getWriter();
@@ -31,16 +41,16 @@ public class RegisterServlet extends HttpServlet {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        HttpSession session = req.getSession();
-        String registerStatus = "";
+
         if(ans){
-            registerStatus = "registered";
-            session.setAttribute("registerStatus",registerStatus);
-            res.sendRedirect("/Quiz-Web/Homepage");
+            registerStatus = "loggedIn";
+            session.setAttribute("loginStatus",registerStatus);
+            session.setAttribute("username", username);
+            res.sendRedirect("/homepage");
         }else {
-            registerStatus = "username already exists";
+            registerStatus = "already used";
             session.setAttribute("registerStatus",registerStatus);
-            res.sendRedirect("/Quiz-Web/Register");
+            res.sendRedirect("/register");
         }
     }
 

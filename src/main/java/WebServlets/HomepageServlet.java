@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 
-@WebServlet("/Homepage")
+@WebServlet("/homepage")
 public class HomepageServlet extends HttpServlet {
 
 
@@ -23,7 +23,7 @@ public class HomepageServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession sess = request.getSession();
         if(sess.getAttribute("username") == null){
-            response.sendRedirect("/Quiz-Web/Login");
+            response.sendRedirect("/register/register.jsp");
             return;
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher("/homepage/homepage.jsp");
