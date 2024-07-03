@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 
-@WebServlet("/Login")
+@WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -48,7 +48,7 @@ public class LoginServlet extends HttpServlet {
 
 
 
-        res.sendRedirect("/Quiz-Web/Login");
+        res.sendRedirect("/login");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession sess = req.getSession();
         if(sess.getAttribute("loginStatus") != null && ((String)sess.getAttribute("loginStatus")).equals("loggedIn") ){
-            res.sendRedirect("/Quiz-Web/Homepage");
+            res.sendRedirect("/homepage");
             return;
         }
         RequestDispatcher dispatcher = req.getRequestDispatcher("/login/index.jsp");
