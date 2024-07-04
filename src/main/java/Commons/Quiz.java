@@ -9,7 +9,7 @@ public class Quiz {
     //    The text description of the quiz.
     private String quizDescription;
     //    The creator of the quiz (hot linked to the creator’s user page).
-    private User creator;
+    private int creatorId;
 
     private ArrayList<Question> questions;
 
@@ -28,14 +28,14 @@ public class Quiz {
         IMMEDIATE_CORRECTION
     }
 
-    public Quiz(int quizID, ArrayList<QuizOptions> quizOptions, String quizName, String quizDescription, User creator,
+    public Quiz(int quizID, ArrayList<QuizOptions> quizOptions, String quizName, String quizDescription, int creatorId,
                 ArrayList<Question> questions) {
         this.quizID = quizID;
         this.quizOptions = quizOptions;
         this.quizName = quizName;
         this.quizDescription = quizDescription;
         this.questions = questions;
-        this.creator = creator;
+        this.creatorId = creatorId;
     }
 
     public int getQuizID() {
@@ -50,8 +50,8 @@ public class Quiz {
     public String getQuizDescription() {
         return quizDescription;
     }
-    public User creator() {
-        return creator;
+    public int creator() {
+        return creatorId;
     }
 
     public ArrayList<Question> getQuestions() {

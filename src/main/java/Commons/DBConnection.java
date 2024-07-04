@@ -4,6 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 
 public class DBConnection {
     private Connection con;
@@ -378,7 +379,76 @@ public class DBConnection {
         return result;
     }
 
+    public Quiz getQuiz(int id){
+        Quiz quiz = null;
+        String quizName = getQuizName(id);
+        String quizDescription = null;
+        int quizAuthorId = 0;
+        ArrayList<Quiz.QuizOptions> quizOptions = new ArrayList<>();
+        ArrayList<Question> questions = new ArrayList<>();
+        String query = "SELECT * FROM quizzes WHERE quiz_id = "+id;
+        try{
+            this.resultSet = stmt.executeQuery(query);
+            this.resultSet.next();
+            quizName = this.resultSet.getString("quiz_name");
+            quizDescription = this.resultSet.getString("quiz_description");
+            quizAuthorId = this.resultSet.getInt("author_id");
+            if(resultSet.getBoolean("random_question_option")){
+                quizOptions.add(Quiz.QuizOptions.RANDOM_QUESTIONS);
+            }
+            if(resultSet.getString("page_options").equals("one-page")){
+                quizOptions.add(Quiz.QuizOptions.ONE_PAGE);
+            }else{
+                quizOptions.add(Quiz.QuizOptions.MULTIPLE_PAGES);
+            }
+            if(resultSet.getBoolean("immediate_correction")){
+                quizOptions.add(Quiz.QuizOptions.IMMEDIATE_CORRECTION);
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        query = "SELECT * FROM questions WHERE quiz_id = "+id;
+        try{
+            this.resultSet = stmt.executeQuery(query);
+            while(resultSet.next()){
+                int questionId = resultSet.getInt("question_id");
+                String questionText = resultSet.getString("question_text");
+                int questionNum = resultSet.getInt("question_num");
+                int quizId = resultSet.getInt("quiz_id");
+                String imageUrl = resultSet.getString("image_url");
+                Boolean multipleChoice = resultSet.getBoolean("multiple_choice");
+                ArrayList<Answer> answers = new ArrayList<>();
+                Question.QuestionType type;
+                if(multipleChoice){
+                    type = Question.QuestionType.MULTIPLE_CHOICE;
+                }else if(imageUrl != null && !imageUrl.isEmpty()){
+                    type = Question.QuestionType.PICTURE_RESPONSE;
+                }else {
+                    type = Question.QuestionType.QUESTION_RESPONSE;
+                }
+                if(type == Question.QuestionType.MULTIPLE_CHOICE){
+                    query = "SELECT * FROM answers WHERE question_id = "+questionId;
+                    ResultSet localSet = stmt.executeQuery(query);
+                    while(localSet.next()){
+                        int answerId = localSet.getInt("answer_id");
+                        String answerText = localSet.getString("answer_text");
+                        boolean isCorrect = localSet.getBoolean("correct_answer");
+                        Answer answer = new Answer(answerId, answerText, isCorrect);
+                        answers.add(answer);
+                    }
+                }
+                Question question = new Question(questionId, type, questionText, questionNum, imageUrl, answers, 0);
+                questions.add(question);
+            }
+        }catch(SQLException e) {
+            e.printStackTrace();
+        }
+
+        quiz = new Quiz(id, quizOptions ,quizName, quizDescription, quizAuthorId, questions);
+
+        return quiz;
+    }
 
 
 
@@ -391,7 +461,7 @@ public class DBConnection {
 
             preparedStatement.setString(1, quiz.getQuizName());
             preparedStatement.setString(2, quiz.getQuizDescription());
-            preparedStatement.setString(3, getID(quiz.creator().getUsername()));
+            preparedStatement.setInt(3, quiz.creator());
             preparedStatement.setBoolean(4, quiz.getQuizOptions().contains(Quiz.QuizOptions.RANDOM_QUESTIONS) ? true : false);
             preparedStatement.setString(5, quiz.getQuizOptions().contains(Quiz.QuizOptions.MULTIPLE_PAGES) ? "multiple-page" : "one-page");
             preparedStatement.setBoolean(6, quiz.getQuizOptions().contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION) ? true : false);
