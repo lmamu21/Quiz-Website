@@ -378,10 +378,6 @@ public class DBConnection {
         return result;
     }
 
-
-
-
-
     public boolean createQuiz(Quiz quiz) {
         String insertSQL = "INSERT INTO quizzes (quiz_name, quiz_description, author_id, random_questions_option, page_options, immediate_correction) VALUES (?,?,?,?,?,?)";
         int quiz_id = 0;
@@ -438,8 +434,6 @@ public class DBConnection {
                     return false;
                 }
 
-
-
             }catch (SQLException e){
                 e.printStackTrace();
                 return false;
@@ -465,8 +459,71 @@ public class DBConnection {
             }
         }
 
-
         return true;
+    }
+
+    public ArrayList<Achievement> getAchievements(int userID) throws SQLException {
+        String query = String.format("SELECT * FROM achievements WHERE user_id = \'%s\'", userID);
+        ArrayList<Achievement> achievements = new ArrayList<>();
+        this.resultSet = stmt.executeQuery(query);
+        while (this.resultSet.next()) {
+            achievements.add(new Achievement(resultSet.getInt("user_id"),
+                    Achievement.Award.values()[resultSet.getInt("achievement_type")]));
+        }
+        return achievements;
+    }
+
+    public Achievement createAchievement(int userID, Achievement.Award award) throws SQLException {
+        String query = String.format("INSERT INTO achievements (user_id, achievement_type) VALUES (\'%s\', \'%s\')", userID, award);
+        stmt.executeUpdate(query);
+        return new Achievement(userID, award);
+    }
+
+    public Achievement getCreatedQuizzesAchievement(int userID) throws SQLException {
+        String query = String.format("SELECT COUNT(CASE WHEN user_id = \'%s\' THEN 1 END) as created_quiz_count FROM quizzes", userID);
+        this.resultSet = stmt.executeQuery(query);
+
+        if (this.resultSet.next()) {
+            int createdQuizzes = this.resultSet.getInt(1);
+
+            return switch (createdQuizzes) {
+                case 1 -> createAchievement(userID, Achievement.Award.AMATEUR_AUTHOR);
+                case 5 -> createAchievement(userID, Achievement.Award.PROLIFIC_AUTHOR);
+                case 10 -> createAchievement(userID, Achievement.Award.PRODIGIOUS_AUTHOR);
+                default -> null;
+            };
+        }
+
+        return null;
+    }
+
+    public Achievement getTakenQuizzesAchievement(int userID) throws SQLException {
+        String query = String.format("SELECT COUNT(CASE WHEN user_id = \'%s\' THEN 1 END) as taken_quiz_count FROM QuizAttempts", userID);
+        this.resultSet = stmt.executeQuery(query);
+
+        if (this.resultSet.next()) {
+            int quizzesTaken = this.resultSet.getInt(1);
+            return quizzesTaken == 10 ? createAchievement(userID, Achievement.Award.QUIZ_MACHINE) : null;
+        }
+
+        return null;
+    }
+
+    public Achievement getHighestScoreAchievement(int userID, int score) throws SQLException {
+        // already has I_AM_THE_GREATEST achievement
+        ArrayList<Achievement> achievements = getAchievements(userID);
+        for (Achievement a: achievements) {
+            if (a.getAward() == Achievement.Award.I_AM_THE_GREATEST)
+                return null;
+        }
+
+        String query = String.format("SELECT MAX(PercentCorrect) FROM QuizAttempts WHERE quiz_id = \'%s\'", userID);
+        this.resultSet = stmt.executeQuery(query);
+        if (this.resultSet.next()) {
+            int highScore = this.resultSet.getInt(1);
+            return score >= highScore ? createAchievement(userID, Achievement.Award.I_AM_THE_GREATEST) : null;
+        }
+        return null;
     }
 
 }
