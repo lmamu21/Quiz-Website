@@ -55,7 +55,7 @@ public class QuestionDao {
         }
         return correctAnswers;
     }
-    public synchronized List<IQuestion> getQuestions(String quiz_id){
+    public synchronized List<IQuestion> getQuestions(int quiz_id){
         con = null;
         List<IQuestion> questions =  new ArrayList<IQuestion>();
         try {
