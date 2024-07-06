@@ -101,10 +101,16 @@ public class QuestionDao {
             for(IQuestion question : questions){
                 int indx = question.getIndex();
                 int quizId= question.getQuizId();
-                stmt.executeQuery("SELECT * FROM " + question.getTableName() + "")
+                resultSet = stmt.executeQuery("SELECT id FROM " + question.getTableName() + " WHERE quiz_id  = "  + quizId  + " and question_index = "  + indx);
+                if(resultSet.next()){
+                    question.setId(resultSet.getInt("id"));
+                }
             }
             for(IQuestion question : questions)
                 question.setCorrectAnswers(getCorrectAnswers(question.getId()));
+            for(IQuestion question : questions)
+                question.fillAdditionalData(con);
+
         } catch (SQLException e) {
             e.getStackTrace();
         } finally {
