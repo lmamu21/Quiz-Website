@@ -1,8 +1,12 @@
 package WebServlets;
 
 import Commons.Answer;
+import Commons.Dao.QuizDao;
+import Commons.Interfaces.IQuestion;
 import Commons.Question;
+import Commons.Questions.*;
 import Commons.Quiz;
+import Commons.QuizManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -48,7 +52,7 @@ public class CreateServlet extends HttpServlet {
         }
         options.add(page_option);
 
-        ArrayList<Question> questions = new ArrayList<>();
+        ArrayList<IQuestion> questions = new ArrayList<>();
         int i = 1;
         while(true){
             String typeString = request.getParameter("question-"+i+"-type");
@@ -56,49 +60,107 @@ public class CreateServlet extends HttpServlet {
                 break;
             }
 
-            Question.QuestionType type = null;
+            IQuestion question = null;
             if(typeString.equals("multiple-choice")){
-                type= Question.QuestionType.MULTIPLE_CHOICE;
-            }else if(typeString.equals("image-response")){
-                type=Question.QuestionType.PICTURE_RESPONSE;
-            }else if(typeString.equals("question-response")){
-                type=Question.QuestionType.QUESTION_RESPONSE;
-            }else if(typeString.equals("fill-in-the-blank")){
-                type=Question.QuestionType.FILL_IN_THE_BLANK;
-            }
-            String questionString;
-            if(type==Question.QuestionType.FILL_IN_THE_BLANK){
-               questionString = request.getParameter("question-"+i+"-before") + '\\'+request.getParameter("question-"+i+"-after");
-            }else{
-                questionString = request.getParameter("question-"+i);
-           }
+                String questionString = request.getParameter("question-"+i);
+                ArrayList<String> answers = new ArrayList<>();
+                ArrayList<String> correctAnswers = new ArrayList<>();
 
-            int questionIndex = i;
+                int j = 0;
+                while(true){
+                    String choiceString = request.getParameter("question-"+i+"-choice-"+j);
+                    if(choiceString == null){
+                        break;
+                    }
 
-            String url = null;
-            if(type==Question.QuestionType.PICTURE_RESPONSE){
-                url = request.getParameter("question-"+i+"-image-url");
-            }
+                    answers.add(choiceString);
 
-            ArrayList<Answer> answers = new ArrayList<>();
+                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                        correctAnswers.add(choiceString);
+                    }
 
-            int j = 1;
-            while(true){
-                String answerString = request.getParameter("answer-"+i+"-answer-"+j);
-                if(answerString == null){
-                    break;
+                    j++;
                 }
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                question = new MultipleChoiceQuestion(i, questionString, answers, correctAnswers, mark);
+                questions.add(question);
+            }else if(typeString.equals("image-response")){
+                String questionString = request.getParameter("question-"+i);
+                String url = request.getParameter("question-"+i+"-url");
+                ArrayList<String> answers = new ArrayList<>();
+                ArrayList<String> correctAnswers = new ArrayList<>();
 
+                int j = 0;
+                while(true){
+                    String choiceString = request.getParameter("question-"+i+"-choice-"+j);
+                    if(choiceString == null){
+                        break;
+                    }
+
+                    answers.add(choiceString);
+
+                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                        correctAnswers.add(choiceString);
+                    }
+
+                    j++;
+                }
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                question = new PictureResponseQuestion(i, url, correctAnswers, mark);
+                questions.add(question);
+            }else if(typeString.equals("question-response")){
+                String questionString = request.getParameter("question-"+i);
+                ArrayList<String> answers = new ArrayList<>();
+                ArrayList<String> correctAnswers = new ArrayList<>();
+
+                int j = 0;
+                while(true){
+                    String choiceString = request.getParameter("question-"+i+"-choice-"+j);
+                    if(choiceString == null){
+                        break;
+                    }
+
+                    answers.add(choiceString);
+
+                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                        correctAnswers.add(choiceString);
+                    }
+
+                    j++;
+                }
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                question = new QuestionResponseQuestion(i, questionString, correctAnswers, mark);
+                questions.add(question);
+            }else if(typeString.equals("fill-in-the-blank")){
+                String before = request.getParameter("question-"+i+"-before");
+                String after = request.getParameter("question-"+i+"-after");
+                ArrayList<String> answers = new ArrayList<>();
+                ArrayList<String> correctAnswers = new ArrayList<>();
+
+                int j = 0;
+                while(true){
+                    String choiceString = request.getParameter("question-"+i+"-choice-"+j);
+                    if(choiceString == null){
+                        break;
+                    }
+
+                    answers.add(choiceString);
+
+                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                        correctAnswers.add(choiceString);
+                    }
+
+                    j++;
+                }
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                question = new FillTheBlankQuestion(i, before , after , correctAnswers, mark);
+                questions.add(question);
             }
-
-            int mark = 1; // to be added to client-side to choose and then it will be changed here with getParameter
-
-            Question question = new Question(0, type, questionString, questionIndex, url, answers, mark);
-
-            questions.add(question);
-
+            i++;
         }
-
+        Quiz quiz = new Quiz(0, options, quizName, quizDescription, user_id, questions);
+        QuizManager quizManager = (QuizManager)getServletContext().getAttribute("quizManager");
+        quizManager.addQuiz(quiz);
         //Quiz quiz = new Quiz(0, options, quizName, quizDescription, 0 /*not correct*/ , questions);
         //todo to be added to database using dao. (not currently on this branch)
 
