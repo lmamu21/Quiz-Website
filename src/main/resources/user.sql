@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS achievements;
 DROP TABLE IF EXISTS multiple_choice_answers;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS quizzes;
@@ -55,3 +56,13 @@ CREATE TABLE multiple_choice_answers (
     correct_answer BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
 )
+
+CREATE TABLE achievements (
+    achievement_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    quiz_id INT,
+    achievement_type VARCHAR(255),
+    achievement_text VARCHAR(255),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id)
+);
