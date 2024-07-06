@@ -1,0 +1,133 @@
+:root {
+    --sidebar: #222222;
+    --background: #111;
+    --text-color: white;
+    --btn-bg: #238636;
+    --btn-bg-hover: #145a05;
+}
+
+body {
+    background-color: var(--background);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.form {
+    background-color: var(--sidebar);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    max-width: 800px; /* Adjusted max-width */
+    width: 100%; /* Ensures it takes full width within the max-width limit */
+    margin: auto; /* Center the form horizontally */
+}
+
+.quiz-summary-wrapper label,
+.quiz-summary-wrapper input[type="text"],
+#question-type {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.quiz-summary-wrapper input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: none;
+    box-sizing: border-box;
+}
+
+.btn {
+    display: block;
+    margin: 20px auto;
+    width: 40%;
+    background-color: var(--btn-bg);
+    color: var(--text-color);
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--btn-bg-hover);
+}
+
+.radio-wrapper {
+    margin-bottom: 10px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.question-block {
+    background-color: #333;
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.question-block textarea,
+.question-block input[type="text"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: none;
+    box-sizing: border-box;
+}
+
+.question-block button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: var(--btn-bg);
+    color: var(--text-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.question-block button:hover {
+    background-color: var(--btn-bg-hover);
+}
+
+.question-block div {
+    margin-bottom: 10px;
+    font-size: 18px;
+}

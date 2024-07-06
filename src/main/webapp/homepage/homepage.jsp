@@ -159,6 +159,7 @@
                         <td><a>quiz #3</a></td></tr>
                     </tbody>
                 </table>
+
                 <button class="btn" value="Take quiz">Take another quiz</button>
             </div>
 
@@ -182,7 +183,7 @@
                         <td><a> quiz #0</a></td>
                     </tr>
                 </table>
-                <button class="btn" value="Create quiz">Create quiz</button>
+                <a href="/create"><button class="btn" value="Create quiz">Create quiz</button></a>
             </div>
 
             <div class="achievements">
