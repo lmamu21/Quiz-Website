@@ -2,6 +2,7 @@ package Commons.Dao;
 
 import Commons.Dao.OptionDao;
 import Commons.Dao.QuestionDao;
+import Commons.Interfaces.IQuestion;
 import Commons.Question;
 import Commons.Quiz;
 
@@ -25,59 +26,83 @@ public class QuizDao {
         this.questionDao = _questionDao;
         this.optionDao = optionDao;
     }
-    //public Quiz(int quizID, ArrayList<QuizOptions> quizOptions, String quizName, String quizDescription, User creator,
-    //                ArrayList<Question> questions) {
-    private Quiz fetchQuiz(){
-        Quiz quiz = null;
-        try{
-            int quiz_id = resultSet.getInt(1);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return quiz;
-    }
-    public synchronized boolean addQuiz(Quiz quiz){
+
+    public synchronized void addQuiz(Quiz quiz){
+        ArrayList<IQuestion> questions = quiz.getQuestions();
         con = null;
-
-        String insertSQL = "INSERT INTO quizzes (quiz_name, quiz_description, author_id) VALUES (?,?,?,?)";
-        int quiz_id = 0;
-        try{
+        ArrayList<Quiz> res = new ArrayList<Quiz>();
+        try {
             con = pool.getConnection();
-            PreparedStatement preparedStatement = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+            stmt = con.createStatement();
+            stmt.executeQuery("USE " + databaseName);
 
-            preparedStatement.setString(1, quiz.getQuizName());
-            preparedStatement.setString(2, quiz.getQuizDescription());
-            preparedStatement.setInt(3, quiz.getCreator());
+            String query = "INSERT INTO quizzes (quiz_name, quiz_description, creator) VALUES (?, ?, ?)";
 
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, quiz.getQuizName());
+            ps.setString(2, quiz.getQuizDescription());
+            ps.setInt(3, quiz.getCreatorID());
+            int ID = -1;
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
 
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-                    if(rs.next()) {
-                        quiz_id = rs.getInt(1);
-                    }
-                }
+                resultSet = ps.getGeneratedKeys();
+                ID = resultSet.getInt("quiz_id");
+                System.out.println("A new quiz was inserted successfully!");
             }
-            else {
-                return false;
+
+
+            if(ID != -1){
+                //updating question tables;
+                List<IQuestion> qs = quiz.getQuestions();
+                for(IQuestion q : qs)
+                    questionDao.addQuestion(q,ID);
+                //updating options tables
+                List<Quiz.QuizOptions> qo = quiz.getQuizOptions();
+                for(Quiz.QuizOptions o : qo)
+                    optionDao.addOption(o,ID);
             }
-        }catch (SQLException e){
-            e.printStackTrace();
-            return false;
+
+
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        } finally {
+            if (con != null) try {
+                // Returns the connection to the pool.
+                con.close();
+            } catch (Exception ignored) {
+            }
         }
-        ArrayList<Quiz.QuizOptions> optionsArrayList = quiz.getQuizOptions();
-        ArrayList<Question> questionArrayList = quiz.getQuestions();
-        for(int i = 0 ; i <optionsArrayList.size() ; i++ )
-            optionDao.addOption(optionsArrayList.get(i),quiz_id);
-        for(int i = 0 ; i < questionArrayList.size() ; i++)
-            questionDao.addQuestion(questionArrayList.get(i),quiz_id);
-        return true;
     }
-    public synchronized void removeQuiz(){
 
-    }
-    public synchronized List<Quiz> getUsersQuizzes(int user_id){
-        return null;
+    public synchronized Quiz getQuizForWriting(int quiz_id){
+        con = null;
+        Quiz res = null;
+        try {
+            con = pool.getConnection();
+            stmt = con.createStatement();
+            stmt.executeQuery("USE " + databaseName);
+            String query = "SELECT * FROM quizzes WHERE  quiz_id = " + quiz_id;
+            resultSet = stmt.executeQuery(query);
+            if(resultSet.next()){
+                res = fetchQuiz();
+            }
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        } finally {
+            if (con != null) try {
+                // Returns the connection to the pool.
+                con.close();
+            } catch (Exception ignored) {
+            }
+        }
+        if(res == null)
+            return null;
+        res.setQuizOptions( (ArrayList<Quiz.QuizOptions>) optionDao.getOptions(res.getQuizID()));
+        res.setQuestions((ArrayList<IQuestion>) questionDao.getQuestions(res.getQuizID()));
+        return res;
     }
     public synchronized List<Quiz> getQuizzes(){
         con = null;
@@ -87,7 +112,31 @@ public class QuizDao {
             stmt = con.createStatement();
             stmt.executeQuery("USE " + databaseName);
             String query = "SELECT * FROM quizzes ";
-            stmt.executeQuery(query);
+            resultSet = stmt.executeQuery(query);
+            while(resultSet.next()){
+                res.add(fetchQuiz());
+            }
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        } finally {
+            if (con != null) try {
+                // Returns the connection to the pool.
+                con.close();
+            } catch (Exception ignored) {
+            }
+        }
+        return res;
+    }
+    public synchronized List<Quiz> getUsersQuizzes(int user_id){
+        con = null;
+        ArrayList<Quiz> res = new ArrayList<Quiz>();
+        try {
+            con = pool.getConnection();
+            stmt = con.createStatement();
+            stmt.executeQuery("USE " + databaseName);
+            String query = "SELECT * FROM quizzes WHERE creator = " + user_id;
+            resultSet = stmt.executeQuery(query);
             while(resultSet.next()){
                 res.add(fetchQuiz());
             }
@@ -104,7 +153,19 @@ public class QuizDao {
         return res;
     }
 
-
+    private Quiz fetchQuiz(){
+        Quiz quiz = null;
+        try{
+            int quizId = resultSet.getInt("quiz_id");
+            String quizName = resultSet.getString("quiz_name");
+            String quizDescription = resultSet.getString("quiz_description");
+            int creatorId = resultSet.getInt("creator");
+            quiz = new Quiz(quizId ,quizName,quizDescription,creatorId);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return quiz;
+    }
 
 
 }
