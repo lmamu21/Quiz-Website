@@ -6,46 +6,22 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 public class User {
+    private int userId;
 
     private String username;
 
-    private String hashedPassword;
-
-    private byte[] salt;
-
-    public User(String username, String password) {
+    public User(int userId,String username) {
+        this.userId = userId;
         this.username = username;
-        this.hashedPassword =  password;
 
     }
-
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public int getUserId(){
+        return userId;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    public void setPassword(String password)  {
-        this.hashedPassword = password;
-    }
-
-
-    public byte[] getSalt(){
-        return salt;
-    }
-
-    public void setSalt(byte[] salt) {
-        this.salt = salt;
-    }
-
-    public int getId() {
-        return 0;
-    }
 }
