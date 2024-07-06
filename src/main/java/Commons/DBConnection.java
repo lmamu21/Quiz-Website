@@ -11,7 +11,7 @@ public class DBConnection {
     private ResultSet resultSet;
     private String baseURL = "jdbc:mysql://localhost:3306/";
     private String user = "root";
-    private String password = "admin";
+    private String password = "root1234";
 
     public DBConnection(String database) {
         try {
@@ -23,6 +23,7 @@ public class DBConnection {
             System.out.println("ERROR: Could not connect to database " + database);
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -391,7 +392,7 @@ public class DBConnection {
 
             preparedStatement.setString(1, quiz.getQuizName());
             preparedStatement.setString(2, quiz.getQuizDescription());
-            preparedStatement.setString(3, getID(quiz.creator().getUsername()));
+            preparedStatement.setInt(3, quiz.getCreator());
             preparedStatement.setBoolean(4, quiz.getQuizOptions().contains(Quiz.QuizOptions.RANDOM_QUESTIONS) ? true : false);
             preparedStatement.setString(5, quiz.getQuizOptions().contains(Quiz.QuizOptions.MULTIPLE_PAGES) ? "multiple-page" : "one-page");
             preparedStatement.setBoolean(6, quiz.getQuizOptions().contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION) ? true : false);
