@@ -461,7 +461,7 @@ public class DBConnection {
 
             preparedStatement.setString(1, quiz.getQuizName());
             preparedStatement.setString(2, quiz.getQuizDescription());
-            preparedStatement.setInt(3, quiz.creator());
+            preparedStatement.setInt(3, quiz.creatorID());
             preparedStatement.setBoolean(4, quiz.getQuizOptions().contains(Quiz.QuizOptions.RANDOM_QUESTIONS) ? true : false);
             preparedStatement.setString(5, quiz.getQuizOptions().contains(Quiz.QuizOptions.MULTIPLE_PAGES) ? "multiple-page" : "one-page");
             preparedStatement.setBoolean(6, quiz.getQuizOptions().contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION) ? true : false);
