@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="homepage/homepage.css">
     <link rel="stylesheet" href="homepage.css">
 </head>
+
 <body>
     <header>
         <%

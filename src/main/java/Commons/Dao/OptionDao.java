@@ -38,7 +38,7 @@ public class OptionDao {
             con = pool.getConnection();
             stmt = con.createStatement();
             stmt.executeQuery("USE " + databaseName);
-            String query = String.format("SELECT * FROM quizzes WHERE quiz_id = \'%d\' ",quiz_id );
+            String query = String.format("SELECT * FROM quiz_options WHERE quiz_id = \'%d\' ",quiz_id );
             stmt.executeQuery(query);
             while(resultSet.next()){
                 res.add(fetchOption());

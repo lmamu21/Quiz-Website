@@ -1,5 +1,7 @@
 package Commons;
 
+import Commons.Interfaces.IQuestion;
+
 import java.util.ArrayList;
 
 public class Quiz {
@@ -11,7 +13,7 @@ public class Quiz {
     //    The creator of the quiz (hot linked to the creator’s user page).
     private int creator;
 
-    private ArrayList<Question> Questions;
+    private ArrayList<IQuestion> Questions;
 
 
 
@@ -31,7 +33,7 @@ public class Quiz {
     }
 
     public Quiz(int quizID, ArrayList<QuizOptions> quizOptions, String quizName, String quizDescription, int creator,
-                ArrayList<Question> questions) {
+                ArrayList<IQuestion> questions) {
         this.quizID = quizID;
         this.quizOptions = quizOptions;
         this.quizName = quizName;
@@ -47,6 +49,8 @@ public class Quiz {
         this.creator = creator;
     }
 
+
+
     public int getQuizID() {
         return quizID;
     }
@@ -59,11 +63,11 @@ public class Quiz {
     public String getQuizDescription() {
         return quizDescription;
     }
-    public int getCreator() {
+    public int getCreatorID() {
         return creator;
     }
 
-    public ArrayList<Question> getQuestions() {
+    public ArrayList<IQuestion> getQuestions() {
         return Questions;
     }
 
@@ -71,7 +75,7 @@ public class Quiz {
         this.quizOptions = quizOptions;
     }
 
-    public void setQuestions(ArrayList<Question> questions) {
+    public void setQuestions(ArrayList<IQuestion> questions) {
         Questions = questions;
     }
 
