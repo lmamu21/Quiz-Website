@@ -103,8 +103,18 @@ function addQuestion() {
     };
 
     questionBlock.appendChild(addChoiceButton);
+    const markLabel=document.createElement('label');
+    markLabel.for=`question-${questionCount}-mark`
+    markLabel.textContent='Mark: ';
+    questionBlock.appendChild(markLabel);
 
+    const markInput = document.createElement('input');
+    markInput.type='number';
+    markInput.name=`question-${questionCount}-mark`;
+    markInput.id=`question-${questionCount}-mark`;
+    questionBlock.appendChild(markInput);
     questions.appendChild(questionBlock);
+
     questionCount++;
 }
 

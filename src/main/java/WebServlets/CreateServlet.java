@@ -32,19 +32,21 @@ public class CreateServlet extends HttpServlet {
         }
 
         String username = request.getParameter("username");
+        int user_id = Integer.parseInt(request.getParameter("user_id"));
         String quizName = request.getParameter("quiz-name");
         String quizDescription = request.getParameter("quiz-description");
-
         Quiz.QuizOptions random = request.getParameter("random") != null ? Quiz.QuizOptions.RANDOM_QUESTIONS : null;
-
-
-        Quiz.QuizOptions option = request.getParameter("page-option ").equals("one-page") ? Quiz.QuizOptions.ONE_PAGE : Quiz.QuizOptions.MULTIPLE_PAGES;
+        Quiz.QuizOptions immediate = request.getParameter("immediate") != null ? Quiz.QuizOptions.IMMEDIATE_CORRECTION : null;
+        Quiz.QuizOptions page_option = request.getParameter("page-option ").equals("one-page") ? Quiz.QuizOptions.ONE_PAGE : Quiz.QuizOptions.MULTIPLE_PAGES;
 
         ArrayList<Quiz.QuizOptions> options = new ArrayList<>();
-        options.add(random);
         if(random != null){
             options.add(random);
         }
+        if(immediate != null){
+            options.add(immediate);
+        }
+        options.add(page_option);
 
         ArrayList<Question> questions = new ArrayList<>();
         int i = 1;

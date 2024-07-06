@@ -44,4 +44,8 @@ public class User {
     public void setSalt(byte[] salt) {
         this.salt = salt;
     }
+
+    public int getId() {
+        return 0;
+    }
 }

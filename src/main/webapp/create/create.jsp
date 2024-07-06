@@ -1,4 +1,4 @@
-
+<%@ page import="Commons.User" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -34,6 +34,10 @@
                     <input type="checkbox" id="random" name="random" value="random">
                     <label for="random">Randomize sequence of questions</label><br>
                 </div>
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="immediate" name="immediate" value="immediate">
+                    <label for="immediate">Mark questions immediately after answering (available only for multiple-page quizzes)</label>
+                </div>
             </div>
 
             <select name="question-type" id="question-type">
@@ -44,7 +48,18 @@
             </select>
             <button class="btn" type="button" onclick="addQuestion()">Add Question</button>
             <div id="questions"></div>
-            <input type="text" name="username" value="<%String username = (String) request.getSession().getAttribute("username"); out.println(username);%>" hidden>
+            <input type="text" name="username" value="<%/*User user = (User) request.getSession().getAttribute("user");
+                                                        String username = user.getUsername();
+                                                        out.println(username);*/
+                                                         //TODO user object is not set to HttpSession yet
+                                                         out.println("freeuni");%>"
+                   hidden>
+            <input type="text" name="user_id" value="<% /*int user_id = user.getId();
+                                                        out.println(user_id);*/
+                                                        //TODO user object is not set to HttpSession yet
+                                                        out.println("1");%>"
+
+                   hidden>
             <input class="btn" type="submit">
         </form>
     </div>
