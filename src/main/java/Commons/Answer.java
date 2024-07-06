@@ -2,11 +2,12 @@ package Commons;
 
 public class Answer {
     int answerID;
+    int questionId;
     String answer;
     boolean isCorrect;
-
-    public Answer(int answerID, String answer, boolean isCorrect) {
+    public Answer(int answerID, int questionId, String answer, boolean isCorrect) {
         this.answerID = answerID;
+        this.questionId = questionId;
         this.answer = answer;
         this.isCorrect = isCorrect;
     }
@@ -21,4 +22,7 @@ public class Answer {
         return isCorrect;
     }
 
+    public int getQuestionId() {
+        return questionId;
+    }
 }
