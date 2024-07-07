@@ -3,6 +3,7 @@ package Commons.Interfaces;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IQuestion {
@@ -18,7 +19,7 @@ public interface IQuestion {
     int getQuizId();
     void setId(int id);
     int getId();
-
+    ArrayList<String> getCorrectAnswers();
     void fillAdditionalData(Connection con);
     PreparedStatement prepareAddStatement(Connection con);
     PreparedStatement prepareAdditionalDataAddStatement(Connection con);

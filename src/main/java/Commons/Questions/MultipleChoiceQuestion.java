@@ -108,6 +108,11 @@ public class MultipleChoiceQuestion implements IQuestion {
     }
 
     @Override
+    public ArrayList<String> getCorrectAnswers() {
+       return (ArrayList<String>) correctAnswers;
+    }
+
+    @Override
     public void fillAdditionalData(Connection con) {
         String query = "SELECT correct_answer FROM " + tableName+"_correct_answer"+  " WHERE question_id = " + Id;
         correctAnswers = new ArrayList<String>();
