@@ -23,7 +23,7 @@ public class HomepageServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession sess = request.getSession();
         if(sess.getAttribute("username") == null){
-            response.sendRedirect("/register/register.jsp");
+            response.sendRedirect("/Quiz_Web_war/register/register.jsp");
             return;
         }
         RequestDispatcher dispatcher = request.getRequestDispatcher("/homepage/homepage.jsp");

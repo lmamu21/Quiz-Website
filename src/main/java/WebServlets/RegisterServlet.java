@@ -29,7 +29,7 @@ public class RegisterServlet extends HttpServlet {
 
         if(!password.equals(repeatPassword)){
             session.setAttribute("registerStatus", "no match");
-            res.sendRedirect("/register");
+            res.sendRedirect("/Quiz_Web_war/register");
             return;
         }
 
@@ -46,11 +46,11 @@ public class RegisterServlet extends HttpServlet {
             registerStatus = "loggedIn";
             session.setAttribute("loginStatus",registerStatus);
             session.setAttribute("username", username);
-            res.sendRedirect("/homepage");
+            res.sendRedirect("/Quiz_Web_war/homepage");
         }else {
             registerStatus = "already used";
             session.setAttribute("registerStatus",registerStatus);
-            res.sendRedirect("/register");
+            res.sendRedirect("/Quiz_Web_war/register");
         }
     }
 
