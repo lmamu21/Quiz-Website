@@ -34,4 +34,8 @@ public class QuizManager {
     }
 
 
+    public Quiz getQuiz(int quizId) {
+        //TODO
+        return null;
+    }
 }
