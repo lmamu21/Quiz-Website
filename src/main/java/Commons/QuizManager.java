@@ -20,10 +20,7 @@ public class QuizManager {
         return list.subList(0,Math.min(list.size() - 1 , num - 1));
     }
     public List<Quiz> getRecentQuizzes(int num){
-        ArrayList<Quiz> list = (ArrayList<Quiz>) dao.getQuizzes();
-        //todo
-        Collections.sort(list, (a, b) -> Integer.compare(0 ,0));
-        return list.subList(0,Math.min(list.size() - 1 , num - 1));
+        return dao.getRecentQuizzes(num);
     }
 
     public List<Quiz> getUsersQuizzes(int user_id){

@@ -104,6 +104,30 @@ public class QuizDao {
         res.setQuestions((ArrayList<IQuestion>) questionDao.getQuestions(res.getQuizID()));
         return res;
     }
+    public synchronized Quiz getQuiz(int quiz_id){
+        Quiz res  = null;
+        con = null;
+        try {
+            con = pool.getConnection();
+            stmt = con.createStatement();
+            stmt.executeQuery("USE " + databaseName);
+            String query = "SELECT * FROM quizzes WHERE quiz_id = " + quiz_id;
+            resultSet = stmt.executeQuery(query);
+            if(resultSet.next()){
+                res  = fetchQuiz();
+            }
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        } finally {
+            if (con != null) try {
+                // Returns the connection to the pool.
+                con.close();
+            } catch (Exception ignored) {
+            }
+        }
+        return res;
+    }
     public synchronized List<Quiz> getQuizzes(){
         con = null;
         ArrayList<Quiz> res = new ArrayList<Quiz>();
@@ -128,6 +152,31 @@ public class QuizDao {
         }
         return res;
     }
+    public synchronized List<Quiz> getRecentQuizzes(int maxCount){
+        con = null;
+        ArrayList<Quiz> res = new ArrayList<Quiz>();
+        try {
+            con = pool.getConnection();
+            stmt = con.createStatement();
+            stmt.executeQuery("USE " + databaseName);
+            String query = "SELECT * FROM quizzes  ORDER BY created_at DESC";
+            resultSet = stmt.executeQuery(query);
+            while(resultSet.next() && res.size() < maxCount){
+                res.add(fetchQuiz());
+            }
+
+        } catch (SQLException e) {
+            e.getStackTrace();
+        } finally {
+            if (con != null) try {
+                // Returns the connection to the pool.
+                con.close();
+            } catch (Exception ignored) {
+            }
+        }
+        return res;
+    }
+
     public synchronized List<Quiz> getUsersQuizzes(int user_id){
         con = null;
         ArrayList<Quiz> res = new ArrayList<Quiz>();
