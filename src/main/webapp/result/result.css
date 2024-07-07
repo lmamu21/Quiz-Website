@@ -6,12 +6,12 @@ body {
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 20px auto;
     padding: 20px;
     background-color: #222;
     border: 0.1px solid #444;
-    border-radius: 30px;
+    border-radius: 16px;
 }
 
 p {
@@ -36,24 +36,37 @@ h2 {
     margin: 5px 0;
 }
 
-table {
-    max-width: 1000px;
+.answers {
+    max-width: 1300px;
     margin: 0 auto;
-    width: 100%;
-    border-collapse: collapse;
 }
 
-table th {
-    padding: 10px;
-    text-align: center;
+.answer {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #444;
+    margin-bottom: 10px;
+}
+
+.answer.header {
+    font-weight: bold;
     color: #FFD700;
-    border: 1px solid #238636;
-    background-color: #111;
 }
 
-table td {
-    padding: 10px;
-    text-align: left;
-    border: 1px solid #999;
+.answer:last-child {
+    border-bottom: none;
+}
+
+.answer .item {
+    flex: 1;
+    text-align: center;
     color: #fff;
 }
+
+.answer .header-item {
+    flex: 1;
+    text-align: center;
+    color: lime;
+}
+
