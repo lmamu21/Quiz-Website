@@ -27,7 +27,7 @@ public class SummaryPageServlet extends HttpServlet {
         ServletContext servletContext = getServletContext();
 
 // Retrieve attribute using the context key
-        SummaryPageService summaryPageService = servletContext.getAttribute(ContextKey.SummaryPageService);
+        SummaryPageService summaryPageService = (SummaryPageService) servletContext.getAttribute("SummaryPageService");
         HttpSession session = req.getSession();
         User user = (User)session.getAttribute("user");
         String quizIdParam = req.getParameter("quizId");

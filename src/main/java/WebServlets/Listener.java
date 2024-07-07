@@ -3,9 +3,10 @@ package WebServlets;
 import Commons.AccountManager;
 import Commons.DBInfo;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
+
+import org.apache.tomcat.jdbc.pool.DataSource;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -29,18 +30,19 @@ public class Listener  implements ServletContextListener {
         try{
             // Create and set connection pool parameters.
             PoolProperties properties = new PoolProperties();
-            properties.setDriverClassName(DBInfo;
+            properties.setDriverClassName("DBInfo");
             properties.setUrl(DBInfo.MYSQL_URL);
             properties.setUsername(DBInfo.MYSQL_USERNAME);
             properties.setPassword(DBInfo.MYSQL_PASSWORD);
             properties.setInitialSize(DBInfo.MYSQL_POOL_INITIAL_SIZE);
             DataSource pool = new DataSource();
             pool.setPoolProperties(properties);
-            SummaryPageService summaryPageService = new SummaryPageDAO(new SummaryPageDAO(pool,DBInfo.MYSQL_DATABASE_NAME));
+            SummaryPageService summaryPageService = new SummaryPageService(new SummaryPageDAO(pool,DBInfo.MYSQL_DATABASE_NAME));
 
 
-            context.setAttribute(ContextKey.CONNECTION_POOL, pool);
-            context.setAttribute(ContextKey.SummaryPageService, summaryPageService);
+            context.setAttribute("pool",pool);
+            context.setAttribute("SummaryPageService", summaryPageService);
+
 
 
 

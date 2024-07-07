@@ -471,156 +471,156 @@ public class DBConnection {
         return true;
     }
 
-    public String getUsername(int userId){
-        String query = String.format("SELECT username FROM users WHERE user_id  = \'%d\' " , userId);
-        String result = "";
-        try {
-            this.resultSet = stmt.executeQuery(query);
-
-            if(this.resultSet.next()){
-                // means that there was entry with provided userid
-                result = resultSet.getString(1);
-            }else {
-                throw new IllegalArgumentException();
-            }
-        }catch(IllegalArgumentException e) {
-            System.out.println("ERROR: Could not find entry with user_id \'" + userId + "\'");
-            e.printStackTrace();
-        }catch(Exception e){
-            System.out.println("ERROR: SQL connection error");
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-
-    public String getQuizDescription(int quizId) throws SQLException {
-        String query = "SELECT quiz_description FROM quizzes WHERE quiz_id = ?";
-
-        PreparedStatement preparedStatement = con.prepareStatement(query);
-        preparedStatement.setInt(1, quizId);
-        ResultSet rs = preparedStatement.executeQuery();
-        if (rs.next()) {
-            return rs.getString("quiz_description");
-        }
-        return null;
-
-    }
-
-    public String getCreatorInfo(String quizId) throws SQLException {
-        String query = "SELECT user_id FROM users WHERE user_id = (SELECT author_id FROM quizzes WHERE quiz_id = ?)";
-        PreparedStatement pstmt = con.prepareStatement(query);
-        pstmt.setString(1,quizId);
-        ResultSet rs = pstmt.executeQuery();
-        while(rs.next()){
-            return rs.getString("user_id");
-        }
-        return null;
-    }
-
-    public List<QuizAttempt> getUserAttempts(int userId, int quizId, String orderBy) throws SQLException {
-        String sql = "SELECT * FROM QuizAttempts WHERE UserID = ? AND QuizID = ? ORDER BY " + orderBy;
-        List<QuizAttempt> attempts = new ArrayList<>();
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setInt(1, userId);
-        pstmt.setInt(2, quizId);
-        ResultSet rs = pstmt.executeQuery();
-        while (rs.next()) {
-            attempts.add(new QuizAttempt(rs.getInt("AttemptID"), rs.getInt("QuizID"), rs.getInt("UserID"),
-                    rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken"), rs.getBigDecimal("PercentCorrect")));
-        }
-
-        return attempts;
-    }
-
-    public void saveQuizAttempt(QuizAttempt attempt) throws SQLException {
-        if (!attempt.isValid()) {
-            throw new IllegalArgumentException("Invalid quiz attempt data");
-        }
-
-        String sql = "INSERT INTO QuizAttempts (QuizID, UserID, AttemptDate, TimeTaken, PercentCorrect) VALUES (?, ?, ?, ?, ?)";
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setInt(1, attempt.getQuizId());
-        pstmt.setInt(2, attempt.getUserId());
-        pstmt.setTimestamp(3, attempt.getAttemptDate());
-        pstmt.setTime(4, attempt.getTimeTaken());
-        pstmt.setBigDecimal(5, attempt.getPercentCorrect());
-        pstmt.executeUpdate();
-    }
-
-
-    public List<QuizAttempt> getRecentTestTakersPerformance(int quizId) throws SQLException {
-        String sql = "SELECT * FROM QuizAttempts WHERE QuizID = ? ORDER BY AttemptDate DESC LIMIT 10";
-        List<QuizAttempt> attempts = new ArrayList<>();
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setInt(1, quizId);
-        ResultSet rs = pstmt.executeQuery();
-        while (rs.next()) {
-            attempts.add(new QuizAttempt(rs.getInt("AttemptID"), rs.getInt("QuizID"), rs.getInt("UserID"),
-                    rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken"), rs.getBigDecimal("PercentCorrect")));
-        }
-
-        return attempts;
-    }
-
-    public List<QuizAttempt> getHighestPerformersAllTime(int quizId) throws SQLException {
-        String sql = "SELECT UserID, MAX(PercentCorrect) AS BestScore FROM QuizAttempts WHERE QuizID = ? GROUP BY UserID ORDER BY BestScore DESC LIMIT 10";
-        List<QuizAttempt> attempts = new ArrayList<>();
-        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setInt(1, quizId);
-            ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                QuizAttempt attempt = new QuizAttempt(
-                        -1, // Since we're not using AttemptID here
-                        quizId,
-                        rs.getInt("UserID"),
-                        null, // AttemptDate is not relevant here
-                        null, // TimeTaken is not relevant here
-                        rs.getBigDecimal("BestScore")
-                );
-                attempts.add(attempt);
-            }
-        }
-        return attempts;
-    }
-
-    public List<QuizAttempt> getTopPerformersDaily(int quizId) throws SQLException {
-        List<QuizAttempt> attempts = new ArrayList<>();
-        String sql = "SELECT UserID, MAX(PercentCorrect) AS BestScore FROM QuizAttempts WHERE QuizID = ? AND AttemptDate > NOW() - INTERVAL '1 day' GROUP BY UserID ORDER BY BestScore DESC LIMIT 10";
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        pstmt.setInt(1,quizId);
-        ResultSet rs= pstmt.executeQuery();
-        while(rs.next()){
-            attempts.add(new QuizAttempt(-1,
-                    quizId,
-                    rs.getInt("UserID"),
-                    null,
-                    null,
-                    rs.getBigDecimal("BestScore")));
-        }
-        return attempts;
-
-    }
-
-    public SummaryStatistics getSummaryStatistics(int quizId) throws SQLException {
-        String sql = "SELECT COUNT(*) as TotalAttempts, AVG(PercentCorrect) AS AverageScore, "+
-                "MAX(PercentCorrect) as HighestScore, MIN(PercentCorrect) as LowestScore, "+
-                "AVG(TIME_TO_SEC(TimeTaken)) AS AverageTimeSpent"+
-                "FROM QuizAttempts where QuizID = ?";
-        PreparedStatement pstmt = con.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery();
-        while(rs.next()){
-            int totalAttempts = rs.getInt("TotalAttempts");
-            BigDecimal averageScore = rs.getBigDecimal("AverageScore");
-            BigDecimal highestScore = rs.getBigDecimal("HighestScore");
-            BigDecimal lowestScore = rs.getBigDecimal("LowestScore");
-            Time avgTime = rs.getTime("AverageTimeSpent");
-            SummaryStatistics summary = new SummaryStatistics(quizId,averageScore,highestScore,lowestScore,totalAttempts,avgTime);
-            return summary;
-
-        }
-        return null;
-    }
+//    public String getUsername(int userId){
+//        String query = String.format("SELECT username FROM users WHERE user_id  = \'%d\' " , userId);
+//        String result = "";
+//        try {
+//            this.resultSet = stmt.executeQuery(query);
+//
+//            if(this.resultSet.next()){
+//                // means that there was entry with provided userid
+//                result = resultSet.getString(1);
+//            }else {
+//                throw new IllegalArgumentException();
+//            }
+//        }catch(IllegalArgumentException e) {
+//            System.out.println("ERROR: Could not find entry with user_id \'" + userId + "\'");
+//            e.printStackTrace();
+//        }catch(Exception e){
+//            System.out.println("ERROR: SQL connection error");
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+//
+//
+//    public String getQuizDescription(int quizId) throws SQLException {
+//        String query = "SELECT quiz_description FROM quizzes WHERE quiz_id = ?";
+//
+//        PreparedStatement preparedStatement = con.prepareStatement(query);
+//        preparedStatement.setInt(1, quizId);
+//        ResultSet rs = preparedStatement.executeQuery();
+//        if (rs.next()) {
+//            return rs.getString("quiz_description");
+//        }
+//        return null;
+//
+//    }
+//
+//    public String getCreatorInfo(String quizId) throws SQLException {
+//        String query = "SELECT user_id FROM users WHERE user_id = (SELECT author_id FROM quizzes WHERE quiz_id = ?)";
+//        PreparedStatement pstmt = con.prepareStatement(query);
+//        pstmt.setString(1,quizId);
+//        ResultSet rs = pstmt.executeQuery();
+//        while(rs.next()){
+//            return rs.getString("user_id");
+//        }
+//        return null;
+//    }
+//
+//    public List<QuizAttempt> getUserAttempts(int userId, int quizId, String orderBy) throws SQLException {
+//        String sql = "SELECT * FROM QuizAttempts WHERE UserID = ? AND QuizID = ? ORDER BY " + orderBy;
+//        List<QuizAttempt> attempts = new ArrayList<>();
+//        PreparedStatement pstmt = con.prepareStatement(sql);
+//        pstmt.setInt(1, userId);
+//        pstmt.setInt(2, quizId);
+//        ResultSet rs = pstmt.executeQuery();
+//        while (rs.next()) {
+//            attempts.add(new QuizAttempt(rs.getInt("AttemptID"), rs.getInt("QuizID"), rs.getInt("UserID"),
+//                    rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken"), rs.getBigDecimal("PercentCorrect")));
+//        }
+//
+//        return attempts;
+//    }
+//
+//    public void saveQuizAttempt(QuizAttempt attempt) throws SQLException {
+//        if (!attempt.isValid()) {
+//            throw new IllegalArgumentException("Invalid quiz attempt data");
+//        }
+//
+//        String sql = "INSERT INTO QuizAttempts (QuizID, UserID, AttemptDate, TimeTaken, PercentCorrect) VALUES (?, ?, ?, ?, ?)";
+//        PreparedStatement pstmt = con.prepareStatement(sql);
+//        pstmt.setInt(1, attempt.getQuizId());
+//        pstmt.setInt(2, attempt.getUserId());
+//        pstmt.setTimestamp(3, attempt.getAttemptDate());
+//        pstmt.setTime(4, attempt.getTimeTaken());
+//        pstmt.setBigDecimal(5, attempt.getPercentCorrect());
+//        pstmt.executeUpdate();
+//    }
+//
+//
+//    public List<QuizAttempt> getRecentTestTakersPerformance(int quizId) throws SQLException {
+//        String sql = "SELECT * FROM QuizAttempts WHERE QuizID = ? ORDER BY AttemptDate DESC LIMIT 10";
+//        List<QuizAttempt> attempts = new ArrayList<>();
+//        PreparedStatement pstmt = con.prepareStatement(sql);
+//        pstmt.setInt(1, quizId);
+//        ResultSet rs = pstmt.executeQuery();
+//        while (rs.next()) {
+//            attempts.add(new QuizAttempt(rs.getInt("AttemptID"), rs.getInt("QuizID"), rs.getInt("UserID"),
+//                    rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken"), rs.getBigDecimal("PercentCorrect")));
+//        }
+//
+//        return attempts;
+//    }
+//
+//    public List<QuizAttempt> getHighestPerformersAllTime(int quizId) throws SQLException {
+//        String sql = "SELECT UserID, MAX(PercentCorrect) AS BestScore FROM QuizAttempts WHERE QuizID = ? GROUP BY UserID ORDER BY BestScore DESC LIMIT 10";
+//        List<QuizAttempt> attempts = new ArrayList<>();
+//        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+//            pstmt.setInt(1, quizId);
+//            ResultSet rs = pstmt.executeQuery();
+//            while (rs.next()) {
+//                QuizAttempt attempt = new QuizAttempt(
+//                        -1, // Since we're not using AttemptID here
+//                        quizId,
+//                        rs.getInt("UserID"),
+//                        null, // AttemptDate is not relevant here
+//                        null, // TimeTaken is not relevant here
+//                        rs.getBigDecimal("BestScore")
+//                );
+//                attempts.add(attempt);
+//            }
+//        }
+//        return attempts;
+//    }
+//
+//    public List<QuizAttempt> getTopPerformersDaily(int quizId) throws SQLException {
+//        List<QuizAttempt> attempts = new ArrayList<>();
+//        String sql = "SELECT UserID, MAX(PercentCorrect) AS BestScore FROM QuizAttempts WHERE QuizID = ? AND AttemptDate > NOW() - INTERVAL '1 day' GROUP BY UserID ORDER BY BestScore DESC LIMIT 10";
+//        PreparedStatement pstmt = con.prepareStatement(sql);
+//        pstmt.setInt(1,quizId);
+//        ResultSet rs= pstmt.executeQuery();
+//        while(rs.next()){
+//            attempts.add(new QuizAttempt(-1,
+//                    quizId,
+//                    rs.getInt("UserID"),
+//                    null,
+//                    null,
+//                    rs.getBigDecimal("BestScore")));
+//        }
+//        return attempts;
+//
+//    }
+//
+//    public SummaryStatistics getSummaryStatistics(int quizId) throws SQLException {
+//        String sql = "SELECT COUNT(*) as TotalAttempts, AVG(PercentCorrect) AS AverageScore, "+
+//                "MAX(PercentCorrect) as HighestScore, MIN(PercentCorrect) as LowestScore, "+
+//                "AVG(TIME_TO_SEC(TimeTaken)) AS AverageTimeSpent"+
+//                "FROM QuizAttempts where QuizID = ?";
+//        PreparedStatement pstmt = con.prepareStatement(sql);
+//        ResultSet rs = pstmt.executeQuery();
+//        while(rs.next()){
+//            int totalAttempts = rs.getInt("TotalAttempts");
+//            BigDecimal averageScore = rs.getBigDecimal("AverageScore");
+//            BigDecimal highestScore = rs.getBigDecimal("HighestScore");
+//            BigDecimal lowestScore = rs.getBigDecimal("LowestScore");
+//            Time avgTime = rs.getTime("AverageTimeSpent");
+//            SummaryStatistics summary = new SummaryStatistics(quizId,averageScore,highestScore,lowestScore,totalAttempts,avgTime);
+//            return summary;
+//
+//        }
+//        return null;
+//    }
 
 
 
