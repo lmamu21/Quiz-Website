@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Queue;
 
 public class DBConnection {
     private Connection con;
@@ -12,7 +11,7 @@ public class DBConnection {
     private ResultSet resultSet;
     private String baseURL = "jdbc:mysql://localhost:3306/";
     private String user = "root";
-    private String password = "admin";
+    private String password = "root1234";
 
     public DBConnection(String database) {
         try {
@@ -24,6 +23,7 @@ public class DBConnection {
             System.out.println("ERROR: Could not connect to database " + database);
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -310,234 +310,165 @@ public class DBConnection {
         return result;
     }
 
-    public String getQuizName(int id){
-        String query = String.format("SELECT quiz_name FROM quizzes WHERE quiz_id  = \'%d\' " , id);
-        String result = "";
-        try {
-            this.resultSet = stmt.executeQuery(query);
-            if(this.resultSet.next()){
-                // means that there was entry with provided quiz_id
-                result = resultSet.getString(1);
-            }else {
-                throw new IllegalArgumentException();
-            }
-        }catch(IllegalArgumentException e) {
-            System.out.println("ERROR: Could not find entry with quiz_id \'" + id + "\'");
-            e.printStackTrace();
-        }catch(Exception e){
-            System.out.println("ERROR: SQL connection error");
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    public ArrayList<Integer> getUsersMadeQuizIds(String username){
-        int id = getUserId(username);
-        String query = String.format("SELECT quiz_id FROM quizzes WHERE user_id  = \'%d\' " , id);
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        try {
-            this.resultSet = stmt.executeQuery(query);
-            while(resultSet.next()){
-                result.add(resultSet.getInt(1));
-            }
-        }catch(Exception e) {
-            System.out.println("ERROR: SQL connection error");
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    public ArrayList<Integer> getRecentlyAddedQuizzes(int max_count){
-        String query = String.format("SELECT quiz_id  FROM quizzes ORDER BY creation_date ");
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        try {
-            this.resultSet = stmt.executeQuery(query);
-            while(resultSet.next() && max_count > 0){
-                result.add(resultSet.getInt(1));
-                max_count--;
-            }
-        }catch(Exception e) {
-            System.out.println(" ERROR: SQL connection error");
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    public ArrayList<Integer> getPopularQuizzes(int maxCount){
-        String query = String.format("SELECT quiz_id FROM quizzes ORDER BY write_count DESC");
-        ArrayList<Integer> result = new ArrayList<Integer>();
-        try {
-            this.resultSet = stmt.executeQuery(query);
-            while(resultSet.next() && maxCount > 0){
-                result.add(resultSet.getInt(1));
-                maxCount--;
-            }
-        }catch(Exception e) {
-            System.out.println("ERROR: SQL connection error");
-            e.printStackTrace();
-        }
-        return result;
-    }
-
-    public Quiz getQuiz(int id){
-        Quiz quiz = null;
-        String quizName = getQuizName(id);
-        String quizDescription = null;
-        int quizAuthorId = 0;
-        ArrayList<Quiz.QuizOptions> quizOptions = new ArrayList<>();
-        ArrayList<Question> questions = new ArrayList<>();
-        String query = "SELECT * FROM quizzes WHERE quiz_id = "+id;
-        try{
-            this.resultSet = stmt.executeQuery(query);
-            this.resultSet.next();
-            quizName = this.resultSet.getString("quiz_name");
-            quizDescription = this.resultSet.getString("quiz_description");
-            quizAuthorId = this.resultSet.getInt("author_id");
-            if(resultSet.getBoolean("random_question_option")){
-                quizOptions.add(Quiz.QuizOptions.RANDOM_QUESTIONS);
-            }
-            if(resultSet.getString("page_options").equals("one-page")){
-                quizOptions.add(Quiz.QuizOptions.ONE_PAGE);
-            }else{
-                quizOptions.add(Quiz.QuizOptions.MULTIPLE_PAGES);
-            }
-            if(resultSet.getBoolean("immediate_correction")){
-                quizOptions.add(Quiz.QuizOptions.IMMEDIATE_CORRECTION);
-            }
-        }catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        query = "SELECT * FROM questions WHERE quiz_id = "+id;
-        try{
-            this.resultSet = stmt.executeQuery(query);
-            while(resultSet.next()){
-                int questionId = resultSet.getInt("question_id");
-                String questionText = resultSet.getString("question_text");
-                int questionNum = resultSet.getInt("question_num");
-                int quizId = resultSet.getInt("quiz_id");
-                String imageUrl = resultSet.getString("image_url");
-                Boolean multipleChoice = resultSet.getBoolean("multiple_choice");
-                ArrayList<Answer> answers = new ArrayList<>();
-                Question.QuestionType type;
-                if(multipleChoice){
-                    type = Question.QuestionType.MULTIPLE_CHOICE;
-                }else if(imageUrl != null && !imageUrl.isEmpty()){
-                    type = Question.QuestionType.PICTURE_RESPONSE;
-                }else {
-                    type = Question.QuestionType.QUESTION_RESPONSE;
-                }
-                if(type == Question.QuestionType.MULTIPLE_CHOICE){
-                    query = "SELECT * FROM answers WHERE question_id = "+questionId;
-                    ResultSet localSet = stmt.executeQuery(query);
-                    while(localSet.next()){
-                        int answerId = localSet.getInt("answer_id");
-                        String answerText = localSet.getString("answer_text");
-                        boolean isCorrect = localSet.getBoolean("correct_answer");
-                        Answer answer = new Answer(answerId, answerText, isCorrect);
-                        answers.add(answer);
-                    }
-                }
-                Question question = new Question(questionId, type, questionText, questionNum, imageUrl, answers, 0);
-                questions.add(question);
-            }
-        }catch(SQLException e) {
-            e.printStackTrace();
-        }
-
-        quiz = new Quiz(id, quizOptions ,quizName, quizDescription, quizAuthorId, questions);
-
-        return quiz;
-    }
+//    public String getQuizName(int id){
+//        String query = String.format("SELECT quiz_name FROM quizzes WHERE quiz_id  = \'%d\' " , id);
+//        String result = "";
+//        try {
+//            this.resultSet = stmt.executeQuery(query);
+//            if(this.resultSet.next()){
+//                // means that there was entry with provided quiz_id
+//                result = resultSet.getString(1);
+//            }else {
+//                throw new IllegalArgumentException();
+//            }
+//        }catch(IllegalArgumentException e) {
+//            System.out.println("ERROR: Could not find entry with quiz_id \'" + id + "\'");
+//            e.printStackTrace();
+//        }catch(Exception e){
+//            System.out.println("ERROR: SQL connection error");
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+//
+//    public ArrayList<Integer> getUsersMadeQuizIds(String username){
+//        int id = getUserId(username);
+//        String query = String.format("SELECT quiz_id FROM quizzes WHERE user_id  = \'%d\' " , id);
+//        ArrayList<Integer> result = new ArrayList<Integer>();
+//        try {
+//            this.resultSet = stmt.executeQuery(query);
+//            while(resultSet.next()){
+//                result.add(resultSet.getInt(1));
+//            }
+//        }catch(Exception e) {
+//            System.out.println("ERROR: SQL connection error");
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+//
+//    public ArrayList<Integer> getRecentlyAddedQuizzes(int max_count){
+//        String query = String.format("SELECT quiz_id  FROM quizzes ORDER BY creation_date ");
+//        ArrayList<Integer> result = new ArrayList<Integer>();
+//        try {
+//            this.resultSet = stmt.executeQuery(query);
+//            while(resultSet.next() && max_count > 0){
+//                result.add(resultSet.getInt(1));
+//                max_count--;
+//            }
+//        }catch(Exception e) {
+//            System.out.println(" ERROR: SQL connection error");
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
+//
+//    public ArrayList<Integer> getPopularQuizzes(int maxCount){
+//        String query = String.format("SELECT quiz_id FROM quizzes ORDER BY write_count DESC");
+//        ArrayList<Integer> result = new ArrayList<Integer>();
+//        try {
+//            this.resultSet = stmt.executeQuery(query);
+//            while(resultSet.next() && maxCount > 0){
+//                result.add(resultSet.getInt(1));
+//                maxCount--;
+//            }
+//        }catch(Exception e) {
+//            System.out.println("ERROR: SQL connection error");
+//            e.printStackTrace();
+//        }
+//        return result;
+//    }
 
 
 
-    public boolean createQuiz(Quiz quiz) {
-        String insertSQL = "INSERT INTO quizzes (quiz_name, quiz_description, author_id, random_questions_option, page_options, immediate_correction) VALUES (?,?,?,?,?,?)";
-        int quiz_id = 0;
-        try{
-            PreparedStatement preparedStatement = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
-
-
-            preparedStatement.setString(1, quiz.getQuizName());
-            preparedStatement.setString(2, quiz.getQuizDescription());
-            preparedStatement.setInt(3, quiz.creator());
-            preparedStatement.setBoolean(4, quiz.getQuizOptions().contains(Quiz.QuizOptions.RANDOM_QUESTIONS) ? true : false);
-            preparedStatement.setString(5, quiz.getQuizOptions().contains(Quiz.QuizOptions.MULTIPLE_PAGES) ? "multiple-page" : "one-page");
-            preparedStatement.setBoolean(6, quiz.getQuizOptions().contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION) ? true : false);
-            int rowsAffected = preparedStatement.executeUpdate();
-            if (rowsAffected > 0) {
-                try(ResultSet rs = preparedStatement.getGeneratedKeys()){
-                    if(rs.next()) {
-                        quiz_id = rs.getInt(1);
-                    }
-                }
-            }
-            else {
-                return false;
-            }
-        }catch (SQLException e){
-            e.printStackTrace();
-            return false;
-        }
-
-        // if reached here, entry in quizzes is inserted, but questions are not populated
-        for(Question question : quiz.getQuestions()) {
-            insertSQL = "INSERT INTO questions (question_text, question_num, quiz_id, image_url, multiple_choice) VALUES (?, ?, ?, ?, ?)";
-            int question_id = 0;
-            try{
-                PreparedStatement preparedStatement = con.prepareStatement(insertSQL,  Statement.RETURN_GENERATED_KEYS);
-
-                preparedStatement.setString(1, question.getQuestion());
-                preparedStatement.setInt(2, question.getQuestionIndex());
-                preparedStatement.setInt(3, quiz_id);
-                if(question.getUrl() == null || question.getUrl().isEmpty()){
-                    preparedStatement.setNull(4, Types.VARCHAR);
-                }else{
-                    preparedStatement.setString(4, question.getUrl());
-                }
-                preparedStatement.setBoolean(5, question.getQuestionType() == Question.QuestionType.MULTIPLE_CHOICE);
-                int rowsAffected = preparedStatement.executeUpdate();
-                if(rowsAffected > 0) {
-                    try(ResultSet rs = preparedStatement.getGeneratedKeys()) {
-                        if(rs.next()){
-                            question_id = rs.getInt(1);
-                        }
-                    }
-                }else{
-                    return false;
-                }
-
-
-
-            }catch (SQLException e){
-                e.printStackTrace();
-                return false;
-            }
-            if(question.getQuestionType() == Question.QuestionType.MULTIPLE_CHOICE){
-                insertSQL = "INSERT INTO multiple_choice_answers (option_char, answer_text, question_id, correct_answer) VALUES (?, ?, ?, ?)";
-                char option_char = 'A';
-                for(Answer answer : question.getAnswers()) {
-                    try{
-                        PreparedStatement preparedStatement = con.prepareStatement(insertSQL);
-                        preparedStatement.setString(1, String.valueOf(option_char));
-                        option_char++;
-                        preparedStatement.setString(2, answer.getAnswer());
-                        preparedStatement.setInt(3, question_id);
-                        preparedStatement.setBoolean(4, answer.isCorrect());
-                    }
-                    catch (SQLException e){
-                        e.printStackTrace();
-                        return false;
-                    }
-                }
-
-            }
-        }
-
-
-        return true;
-    }
+//
+//
+//    public boolean createQuiz(Quiz quiz) {
+//        String insertSQL = "INSERT INTO quizzes (quiz_name, quiz_description, author_id, random_questions_option, page_options, immediate_correction) VALUES (?,?,?,?,?,?)";
+//        int quiz_id = 0;
+//        try{
+//            PreparedStatement preparedStatement = con.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+//
+//
+//            preparedStatement.setString(1, quiz.getQuizName());
+//            preparedStatement.setString(2, quiz.getQuizDescription());
+//            preparedStatement.setInt(3, quiz.getCreator());
+//            preparedStatement.setBoolean(4, quiz.getQuizOptions().contains(Quiz.QuizOptions.RANDOM_QUESTIONS) ? true : false);
+//            preparedStatement.setString(5, quiz.getQuizOptions().contains(Quiz.QuizOptions.MULTIPLE_PAGES) ? "multiple-page" : "one-page");
+//            preparedStatement.setBoolean(6, quiz.getQuizOptions().contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION) ? true : false);
+//            int rowsAffected = preparedStatement.executeUpdate();
+//            if (rowsAffected > 0) {
+//                try(ResultSet rs = preparedStatement.getGeneratedKeys()){
+//                    if(rs.next()) {
+//                        quiz_id = rs.getInt(1);
+//                    }
+//                }
+//            }
+//            else {
+//                return false;
+//            }
+//        }catch (SQLException e){
+//            e.printStackTrace();
+//            return false;
+//        }
+//
+//        // if reached here, entry in quizzes is inserted, but questions are not populated
+//        for(Question question : quiz.getQuestions()) {
+//            insertSQL = "INSERT INTO questions (question_text, question_num, quiz_id, image_url, multiple_choice) VALUES (?, ?, ?, ?, ?)";
+//            int question_id = 0;
+//            try{
+//                PreparedStatement preparedStatement = con.prepareStatement(insertSQL,  Statement.RETURN_GENERATED_KEYS);
+//
+//                preparedStatement.setString(1, question.getQuestion());
+//                preparedStatement.setInt(2, question.getQuestionIndex());
+//                preparedStatement.setInt(3, quiz_id);
+//                if(question.getUrl() == null || question.getUrl().isEmpty()){
+//                    preparedStatement.setNull(4, Types.VARCHAR);
+//                }else{
+//                    preparedStatement.setString(4, question.getUrl());
+//                }
+//                preparedStatement.setBoolean(5, question.getQuestionType() == Question.QuestionType.MULTIPLE_CHOICE);
+//                int rowsAffected = preparedStatement.executeUpdate();
+//                if(rowsAffected > 0) {
+//                    try(ResultSet rs = preparedStatement.getGeneratedKeys()) {
+//                        if(rs.next()){
+//                            question_id = rs.getInt(1);
+//                        }
+//                    }
+//                }else{
+//                    return false;
+//                }
+//
+//
+//
+//            }catch (SQLException e){
+//                e.printStackTrace();
+//                return false;
+//            }
+//            if(question.getQuestionType() == Question.QuestionType.MULTIPLE_CHOICE){
+//                insertSQL = "INSERT INTO multiple_choice_answers (option_char, answer_text, question_id, correct_answer) VALUES (?, ?, ?, ?)";
+//                char option_char = 'A';
+//                for(Answer answer : question.getAnswers()) {
+//                    try{
+//                        PreparedStatement preparedStatement = con.prepareStatement(insertSQL);
+//                        preparedStatement.setString(1, String.valueOf(option_char));
+//                        option_char++;
+//                        preparedStatement.setString(2, answer.getAnswer());
+//                        preparedStatement.setInt(3, question_id);
+//                        preparedStatement.setBoolean(4, answer.isCorrect());
+//                    }
+//                    catch (SQLException e){
+//                        e.printStackTrace();
+//                        return false;
+//                    }
+//                }
+//
+//            }
+//        }
+//
+//
+//        return true;
+//    }
 
 }
 

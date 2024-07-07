@@ -94,7 +94,13 @@
                         <td>20</td>
                     </tr>
                 </table>
-                <button class="btn" value="Create quiz">Create quiz</button>
+
+               <form action="/takeQuiz" method="get">
+                   <input type="text" name="quiz_id" value="<%int quiz_id = (int) session.getAttribute("quiz_id");
+                                                                out.println(quiz_id)%>" hidden>
+                   <button class="btn" value="Create quiz">Create quiz</button>
+               </form>
+
             </div>
         </div>
     </div>

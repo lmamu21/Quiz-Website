@@ -1,5 +1,7 @@
 package Commons;
 
+import Commons.Interfaces.IQuestion;
+
 import java.util.ArrayList;
 
 public class Quiz {
@@ -9,9 +11,11 @@ public class Quiz {
     //    The text description of the quiz.
     private String quizDescription;
     //    The creator of the quiz (hot linked to the creator’s user page).
-    private int creatorId;
+    private int creator;
 
-    private ArrayList<Question> questions;
+    private ArrayList<IQuestion> Questions;
+
+
 
     //    Quiz Options
 //    Random Questions — Allow the creator to set the quiz to either randomize the order of the questions or to
@@ -21,22 +25,31 @@ public class Quiz {
 //    to submit the answer, then display another question.
 //    Immediate Correction — For multiple page quizzes, this setting determines whether the user will receive immediate
 //    feedback on an answer, or if the quiz will only be graded once all the questions have been seen and responded to.
-    enum QuizOptions {
+    public enum QuizOptions {
         RANDOM_QUESTIONS,
         ONE_PAGE,
         MULTIPLE_PAGES,
         IMMEDIATE_CORRECTION
     }
 
-    public Quiz(int quizID, ArrayList<QuizOptions> quizOptions, String quizName, String quizDescription, int creatorId,
-                ArrayList<Question> questions) {
+    public Quiz(int quizID, ArrayList<QuizOptions> quizOptions, String quizName, String quizDescription, int creator,
+                ArrayList<IQuestion> questions) {
         this.quizID = quizID;
         this.quizOptions = quizOptions;
         this.quizName = quizName;
         this.quizDescription = quizDescription;
-        this.questions = questions;
-        this.creatorId = creatorId;
+        this.Questions = questions;
+        this.creator = creator;
     }
+
+    public Quiz(int quizID, String quizName, String quizDescription, int creator){
+        this.quizID = quizID;
+        this.quizName = quizName;
+        this.quizDescription = quizDescription;
+        this.creator = creator;
+    }
+
+
 
     public int getQuizID() {
         return quizID;
@@ -50,11 +63,21 @@ public class Quiz {
     public String getQuizDescription() {
         return quizDescription;
     }
-    public int creator() {
-        return creatorId;
+    public int getCreatorID() {
+        return creator;
     }
 
-    public ArrayList<Question> getQuestions() {
-        return questions;
+    public ArrayList<IQuestion> getQuestions() {
+        return Questions;
     }
+
+    public void setQuizOptions(ArrayList<QuizOptions> quizOptions) {
+        this.quizOptions = quizOptions;
+    }
+
+    public void setQuestions(ArrayList<IQuestion> questions) {
+        Questions = questions;
+    }
+
+
 }
