@@ -11,7 +11,7 @@ public class DBConnection {
     private ResultSet resultSet;
     private String baseURL = "jdbc:mysql://localhost:3306/";
     private String user = "root";
-    private String password = "admin";
+    private String password = "barbariko15";
 
     public DBConnection(String database) {
         try {
