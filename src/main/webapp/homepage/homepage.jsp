@@ -37,18 +37,7 @@
                     <thead></thead>
                     <tbody>
 
-                        <%
-                            DBConnection con = new DBConnection("quiz_test");
-                            int maxCount = 3;
-                            List<Integer> popQuizList = con.getPopularQuizzes(maxCount);
-                            int counter = 1;
-                            for(int i : popQuizList){
-                        %>
-                            <tr><td><%= counter%> </td><td><a> <%= con.getQuizName(i)%></a></td></tr>
-                        <%
-                                counter++;
-                            }
-                        %>
+
                     </tbody>
                 </table>
             </div>
@@ -57,16 +46,7 @@
                 <table class="quizzes-table">
                     <thead></thead>
                        <tbody>
-                       <%
-                           List<Integer> recentlyAdded = con.getRecentlyAddedQuizzes(maxCount);
-                           counter = 1;
-                           for(int i : recentlyAdded){
-                       %>
-                       <tr><td><%= counter%> </td><td><a> <%= con.getQuizName(i)%></a></td></tr>
-                       <%
-                               counter++;
-                           }
-                       %>
+                       <td><a> quiz #3 </a></td>
                        </tbody>
                     </table>
             </div>
@@ -93,17 +73,13 @@
                         <img src="friend-add.svg" alt="friend icon" class="icon">
                         <div class="hover-content">
                             <h4>Friend Requests</h4>
-                            <%
-                                String curUser = "";
-                                List<String> friendRequestUsernames = con.getFriendRequestUsernames(curUser);
-                                for(String username : friendRequestUsernames){
-                            %>
+
                             <div class="friend-request">
-                                <p><strong><a><%= username%></a></strong> sent friend request</p>
+                                <p><strong><a>someone</a></strong> sent friend request</p>
                                 <button class="friend-request-btn accept-button">Accept</button>
                                 <button class="friend-request-btn reject-button">Decline</button>
                             </div>
-                            <% }%>
+
 
                         </div>
                     </div>
@@ -160,6 +136,7 @@
                         <td><a>quiz #3</a></td></tr>
                     </tbody>
                 </table>
+
                 <button class="btn" value="Take quiz">Take another quiz</button>
             </div>
 
@@ -183,7 +160,7 @@
                         <td><a> quiz #0</a></td>
                     </tr>
                 </table>
-                <button class="btn" value="Create quiz">Create quiz</button>
+                <a href="/create"><button class="btn" value="Create quiz">Create quiz</button></a>
             </div>
 
             <div class="achievements">

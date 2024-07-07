@@ -17,7 +17,7 @@ public class Question {
 //    Multiple Choice — Allow the user to select from one of a number of possible provided answers.
 //    Picture-Response Questions — In a picture response question, the system will display an image,
 //    and the user will provide a text response to the image.
-     enum QuestionType {
+    public enum QuestionType {
         QUESTION_RESPONSE,
         FILL_IN_THE_BLANK,
         MULTIPLE_CHOICE,

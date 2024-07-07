@@ -10,6 +10,7 @@ import java.util.List;
 
 public class QuestionResponseQuestion implements IQuestion {
     public static final String tableName = "question_response";
+    public static final String correctAnswerTable = "ques_res_correct_answer";
 
     private int Id;
     private int quizId;

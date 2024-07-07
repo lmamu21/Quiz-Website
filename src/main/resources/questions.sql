@@ -48,7 +48,7 @@ CREATE TABLE fill_the_blank (
 );
 
 //this must be changed
-CREATE TABLE correct_answers (
+CREATE TABLE ques_res_correct_answer (
     id INT AUTO_INCREMENT PRIMARY KEY,
     question_id INT,
     correct_answer VARCHAR(255),
