@@ -45,7 +45,7 @@ public class singlePageQuizServlet extends HttpServlet {
         questions.add(new PictureResponseQuestion(3 , "https://upload.wikimedia.org/wikipedia/commons/6/62/Eo_circle_red_number-3.svg" , answers3 , 1 ));
         questions.add(new QuestionResponseQuestion(4,"what is 2 + 2 " , Arrays.asList(new String[]{"4"}), 1));
 
-
+        //todo:redirect to the result page and store result
         res.setContentType("text/html");
         PrintWriter out = res.getWriter();
         out.println("<html>");
@@ -68,6 +68,9 @@ public class singlePageQuizServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
+        HttpSession sess = req.getSession();
+        int quiz_id  = (Integer) sess.getAttribute("quiz_id");
+        
         RequestDispatcher dispatcher = req.getRequestDispatcher("/singlePageQuiz/singlePage.jsp");
         dispatcher.forward(req, resp);
     }

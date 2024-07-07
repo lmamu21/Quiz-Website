@@ -1,5 +1,6 @@
 package Commons;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FriendRequestManager {
@@ -9,8 +10,20 @@ public class FriendRequestManager {
         this.dao = _dao;
     }
 
+
     public List<FriendRequest> getFriendRequestsTo(String to){
         return dao.getFriendRequestsTo(to);
+    }
+
+
+    public List<FriendRequest> getPendingFriendRequests(String to){
+        ArrayList<FriendRequest> requests =(ArrayList<FriendRequest>) dao.getFriendRequestsTo(to);
+        ArrayList<FriendRequest> pending = new ArrayList<>();
+        for(FriendRequest var : requests){
+            if(var.getStatus() == FriendRequest.Status.Pending)
+                pending.add(var);
+        }
+        return pending;
     }
 
     public FriendRequest.Status sendFriendRequest(String from ,String to){

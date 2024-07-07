@@ -17,19 +17,7 @@ public class FriendRequestDao {
         this.pool = pool;
         this.databaseName = databaseName;
     }
-    private FriendRequest fetchFriendRequest(){
-        FriendRequest request = null;
-        try{
-            int id = resultSet.getInt("id");
-            String from = resultSet.getString("from_username");
-            String to = resultSet.getString("to_username");
-            FriendRequest.Status  status = FriendRequest.Status.valueOf(resultSet.getString("status"));
-            request = new FriendRequest(id,from,to,status);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return request;
-    }
+   
     public synchronized void  addFriendRequest(FriendRequest request){
 
         con = null;
@@ -37,7 +25,9 @@ public class FriendRequestDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            
             stmt.executeQuery("USE " + databaseName);
+            
             String query = "INSERT INTO friend_request (from_username, to_username, status) VALUES (?, ?, ?);";
             PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1,request.getFrom());
@@ -128,6 +118,20 @@ public class FriendRequestDao {
                 con.close();
             } catch (Exception ignored) {
             }
+        }
+        return request;
+    }
+
+    private FriendRequest fetchFriendRequest(){
+        FriendRequest request = null;
+        try{
+            int id = resultSet.getInt("id");
+            String from = resultSet.getString("from_username");
+            String to = resultSet.getString("to_username");
+            FriendRequest.Status  status = FriendRequest.Status.valueOf(resultSet.getString("status"));
+            request = new FriendRequest(id,from,to,status);
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return request;
     }
