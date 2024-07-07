@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionResponseQuestion implements IQuestion {
@@ -95,6 +96,11 @@ public class QuestionResponseQuestion implements IQuestion {
     @Override
     public int getId() {
         return Id;
+    }
+
+    @Override
+    public ArrayList<String> getCorrectAnswers() {
+        return (ArrayList<String>) correctAnswers;
     }
 
     @Override

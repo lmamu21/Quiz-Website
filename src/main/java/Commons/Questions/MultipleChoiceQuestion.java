@@ -103,6 +103,11 @@ public class MultipleChoiceQuestion implements IQuestion {
     }
 
     @Override
+    public ArrayList<String> getCorrectAnswers() {
+       return (ArrayList<String>) correctAnswers;
+    }
+
+    @Override
     public void fillAdditionalData(Connection con) {
         String query = "INSERT INTO " + OptionAnswersTableName + " (question_id, option_answer) VALUES (?, ?)";
         try  {
