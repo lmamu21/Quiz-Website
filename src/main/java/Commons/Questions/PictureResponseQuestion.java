@@ -15,7 +15,7 @@ public class PictureResponseQuestion implements IQuestion {
     private int quizId;
     private int index;
     private String ImgUrl;
-                private List<String> correctAnswers;
+    private List<String> correctAnswers;
     private int Mark;
 
     //for constructing from jsp file
@@ -40,17 +40,22 @@ public class PictureResponseQuestion implements IQuestion {
     }
     @Override
     public String getHtmlComponent() {
-        String out = "<div class = \"question_div\">\n" +
+        String out = " <section class = \"question_section\">\n" +
+                "            <div class = \"question_num\">\n" +
+                "                <p>\n" +
+                                        index +
+                "                </p>\n" +
+                "            </div>\n" +
+                "            <div class = \"question_div\">\n" +
                 "                <img src = \" " +ImgUrl + "\">\n" +
                 "            </div>\n" +
                 "\n" +
                 "            <div class = \"answer_div\">\n" +
-                "\n" +
-                "\n" +
                 "                    <label class = \"fill-in\">\n" +
-                "                        <input type=\"text\" name=\" "+ index +" \" >\n" +
+                "                        <input type=\"text\" name=\""+ index +"\" >\n" +
                 "                    </label>\n" +
-                "            </div>";
+                "            </div>\n" +
+                "     </section>\n";
         return out;
     }
 

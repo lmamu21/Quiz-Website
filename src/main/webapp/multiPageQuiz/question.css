@@ -10,8 +10,6 @@ body {
     padding: 0;
 }
 
-
-
 .parent-container {
     outline: none;
     border: #111111;
@@ -116,7 +114,7 @@ input[type="submit"] {
     border: none; /* Remove border */
     border-radius: 10px; /* Rounded corners */
     padding: 15px 30px; /* Padding for size */
-    font-size: 1.em; /* Larger font size */
+    font-size: 1em; /* Larger font size */
     font-weight: bold; /* Bold text */
     cursor: pointer; /* Pointer cursor on hover */
     transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
