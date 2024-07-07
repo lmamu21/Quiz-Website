@@ -23,6 +23,7 @@ public class QuizManager {
         return dao.getRecentQuizzes(num);
     }
 
+
     public List<Quiz> getUsersQuizzes(int user_id){
         return dao.getUsersQuizzes(user_id);
     }

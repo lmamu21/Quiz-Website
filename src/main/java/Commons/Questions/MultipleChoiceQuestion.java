@@ -25,6 +25,7 @@ public class MultipleChoiceQuestion implements IQuestion {
     public MultipleChoiceQuestion(int index, String question , List<String> OptionAnswers , List<String> correctAnswers , int Mark ){
         this.Id = 0;
         this.index = index;
+        this.OptionAnsers = OptionAnswers;
         this.question = question;
         this.correctAnswers = correctAnswers;
         this.Mark = Mark;
@@ -44,18 +45,25 @@ public class MultipleChoiceQuestion implements IQuestion {
     }
     @Override
     public String getHtmlComponent() {
-        String out = "<div class = \"question_div\">\n" +
+        String out = " <section class = \"question_section\">\n" +
+                "            <div class = \"question_num\">\n" +
+                "                <p>\n" +
+                index +
+                "                </p>\n" +
+                "            </div>\n" +
+                "<div class = \"question_div\">\n" +
                 "<p> " + question + " </p>\n" +
                 "            </div>\n" +
                 "\n" +
                 "            <div class = \"answer_div\">\n";
         for(String var : OptionAnsers){
             out += "<label class = \"select-answer\">\n" +
-                    "                        <input type=\"radio\" name=\"fruit\" value=\""+index+"\"> " +var + "\n" +
+                    "                        <input type=\"radio\" name=\""+index+"\" value=\""+var+"\"> " +var + "\n" +
                     "                    </label>\n";
         }
 
-        out += "</div>";
+        out += "            </div>\n" +
+                "</section >";
         return out;
     }
 

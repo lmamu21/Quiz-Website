@@ -45,18 +45,25 @@ public class FillTheBlankQuestion implements IQuestion {
     }
     @Override
     public String getHtmlComponent() {
-        String out = "<div class = \"question_div\">\n" +
+        String out = " <section class = \"question_section\">\n" +
+                "            <div class = \"question_num\">\n" +
+                "                <p>\n" +
+                 index +
+                "                </p>\n" +
+                "            </div>\n" +
+                "<div class = \"question_div\">\n" +
                 "<p> " + questionHead + " </p>\n" +
                 "\n" +
                 "                    <label class = \"fill-in\">\n" +
-                "                        <input type=\"text\" name=\" "+ index +" \" >\n" +
+                "                        <input type=\"text\" name=\""+ index +"\" >\n" +
                 "                    </label>\n" +
                 "<p> " + questionTail+ " </p>\n" +
                 "            </div>\n" +
                 "\n" +
                 "            <div class = \"answer_div\">\n" +
 
-                "            </div>";
+                "            </div>\n" +
+                "</section >";
         return out;
     }
 
