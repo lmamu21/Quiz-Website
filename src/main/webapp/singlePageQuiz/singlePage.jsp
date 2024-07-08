@@ -1,6 +1,6 @@
 <%@ page import="Commons.Quiz" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="Commons.Question" %>
+
 <%@ page import="Commons.Interfaces.IQuestion" %>
 <%@ page import="Commons.Questions.FillTheBlankQuestion" %>
 <%@ page import="Commons.Questions.MultipleChoiceQuestion" %>
@@ -26,26 +26,15 @@
         <p>description : this is the quiz description</p>
     </header>
     <main>
-        <form action="/singlePageQuiz" method="post">
+        <form action="/Quiz_Web_war/singlePageQuiz" method="post">
 
 
             <%
 
                 ArrayList<IQuestion> questions = new ArrayList<IQuestion>();
-                ArrayList<String> answers1 = new ArrayList<String>();
-                answers1.add("1");
-                questions.add(new FillTheBlankQuestion(1,"1 + " , " = 2" , answers1, 1));
-                ArrayList<String> answers2 = new ArrayList<>();
-                answers2.add("2");
-                ArrayList<String> choices = new ArrayList<>();
-                choices.add("1");
-                choices.add("2");
-                choices.add("3");
-                questions.add(new MultipleChoiceQuestion(2,"1 + 1 = " , choices,answers2,1));
-                ArrayList<String> answers3 = new ArrayList<>();
-                answers2.add("3");
-                questions.add(new PictureResponseQuestion(3 , "https://upload.wikimedia.org/wikipedia/commons/6/62/Eo_circle_red_number-3.svg" , answers3 , 1 ));
-                questions.add(new QuestionResponseQuestion(4,"what is 2 + 2 " , Arrays.asList(new String[]{"4"}), 1));
+               Quiz quiz = (Quiz)session.getAttribute("quiz");
+               questions = quiz.getQuestions();
+
                 for(int i = 0 ; i < questions.size() ; i++){
                     out.print(questions.get(i).getHtmlComponent());
                 }

@@ -34,21 +34,26 @@ public class QuizDao {
             con = pool.getConnection();
             stmt = con.createStatement();
             String query = "INSERT INTO quizzes (quiz_name, quiz_description, creator) VALUES (?, ?, ?)";
-            PreparedStatement ps = con.prepareStatement(query);
+            PreparedStatement ps = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, quiz.getQuizName());
             ps.setString(2, quiz.getQuizDescription());
             ps.setInt(3, quiz.getCreatorID());
             int ID = -1;
             int rowsInserted = ps.executeUpdate();
+            System.out.println("rows inserted : " + rowsInserted);
             if (rowsInserted > 0) {
-                resultSet = ps.getGeneratedKeys();
-                ID = resultSet.getInt("quiz_id");
+                ResultSet rstemp = ps.getGeneratedKeys();
+                System.out.println("here" + rstemp.toString());
+                if(rstemp.next())
+                    ID = rstemp.getInt(1);
+
                 System.out.println("A new quiz was inserted successfully!");
             }
 
             if(ID != -1){
                 //updating question tables;
                 List<IQuestion> qs = quiz.getQuestions();
+                System.out.println(qs.size());
                 for(IQuestion q : qs)
                     questionDao.addQuestion(q,ID);
                 //updating options tables
@@ -84,7 +89,6 @@ public class QuizDao {
             }
             stmt.close();
 
-
         } catch (SQLException e) {
             e.getStackTrace();
         } finally {
@@ -97,6 +101,7 @@ public class QuizDao {
         if(res == null)
             return null;
         res.setQuizOptions( (ArrayList<Quiz.QuizOptions>) optionDao.getOptions(res.getQuizID()));
+        System.out.println("result quiz id: "+res.getQuizID());
         res.setQuestions((ArrayList<IQuestion>) questionDao.getQuestions(res.getQuizID()));
         return res;
     }

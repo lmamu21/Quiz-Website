@@ -11,7 +11,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Homepage</title>
-    <link rel="stylesheet" href="summary.css">
+    <link rel="stylesheet" href="quiz-summary/summary.css">
 </head>
 
 <body>
@@ -65,7 +65,10 @@
                 </div>
             </div>
             <div class="footnote">
-                <button class="btn">Start Quiz</button>
+               <a href="/Quiz_Web_war/singlePageQuiz">
+
+                   <button  class="btn">Start Quiz</button>
+               </a>
             </div>
         </div>
 

@@ -62,7 +62,7 @@ public class CreateServlet extends HttpServlet {
                 ArrayList<String> answers = new ArrayList<>();
                 ArrayList<String> correctAnswers = new ArrayList<>();
 
-                int j = 0;
+                int j = 1;
                 while(true){
                     String choiceString = request.getParameter("question-"+i+"-choice-"+j);
                     if(choiceString == null){
@@ -71,12 +71,14 @@ public class CreateServlet extends HttpServlet {
 
                     answers.add(choiceString);
 
-                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                    if(request.getParameter("question-"+i+"-answer-"+j+"-isCorrect") != null){
                         correctAnswers.add(choiceString);
                     }
 
                     j++;
                 }
+                for(String ans : answers)
+                    System.out.println(ans);
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new MultipleChoiceQuestion(i, questionString, answers, correctAnswers, mark);
                 questions.add(question);
@@ -133,7 +135,7 @@ public class CreateServlet extends HttpServlet {
                 ArrayList<String> answers = new ArrayList<>();
                 ArrayList<String> correctAnswers = new ArrayList<>();
 
-                int j = 0;
+                int j = 1;
                 while(true){
                     String choiceString = request.getParameter("question-"+i+"-choice-"+j);
                     if(choiceString == null){
@@ -155,11 +157,11 @@ public class CreateServlet extends HttpServlet {
             i++;
         }
         Quiz quiz = new Quiz(0, options, quizName, quizDescription, user_id, questions);
+        quiz.setQuestions(questions);
         QuizManager quizManager = (QuizManager)getServletContext().getAttribute("QuizManager");
         quizManager.addQuiz(quiz);
 
+        response.sendRedirect("/Quiz_Web_war/homepage");
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/homepage/homepage.jsp");
-        dispatcher.forward(request, response);
     }
 }

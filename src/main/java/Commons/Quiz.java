@@ -76,7 +76,7 @@ public class Quiz {
     }
 
     public void setQuestions(ArrayList<IQuestion> questions) {
-        Questions = questions;
+        Questions = new ArrayList<>(questions);
     }
 
 

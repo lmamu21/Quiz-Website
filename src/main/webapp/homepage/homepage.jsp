@@ -43,7 +43,7 @@
 
                         %>
                         <% for(Quiz q : recents) {
-                            out.println("<td><a href=\" " + "/SummaryPage?quizId="+q.getQuizID()+ "\"> "+q.getQuizName()+"</a></td>");
+                            out.println("<td><a href=\" " + "/Quiz_Web_war/SummaryPage?quizId="+q.getQuizID()+ "\"> "+q.getQuizName()+"</a></td>");
 
                         }%>
                        </tbody>
@@ -160,7 +160,7 @@
                         <td><a> quiz #0</a></td>
                     </tr>
                 </table>
-                <a href="/create"><button class="btn" value="Create quiz">Create quiz</button></a>
+                <a href="/Quiz_Web_war/create"><button class="btn" value="Create quiz">Create quiz</button></a>
             </div>
 
             <div class="achievements">

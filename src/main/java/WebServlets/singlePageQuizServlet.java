@@ -7,6 +7,7 @@ import Commons.Questions.MultipleChoiceQuestion;
 import Commons.Questions.PictureResponseQuestion;
 import Commons.Questions.QuestionResponseQuestion;
 import Commons.Quiz;
+import Commons.QuizManager;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -20,6 +21,7 @@ import java.io.PrintWriter;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @WebServlet("/singlePageQuiz")
 public class singlePageQuizServlet extends HttpServlet {
@@ -29,21 +31,9 @@ public class singlePageQuizServlet extends HttpServlet {
             throws ServletException, IOException {
         //TODO: must be changed
 
-        ArrayList<IQuestion> questions = new ArrayList<IQuestion>();
-        ArrayList<String> answers1 = new ArrayList<String>();
-        answers1.add("1");
-        questions.add(new FillTheBlankQuestion(1,"1 + " , " = 2" , answers1, 1));
-        ArrayList<String> answers2 = new ArrayList<>();
-        answers2.add("2");
-        ArrayList<String> choices = new ArrayList<>();
-        choices.add("1");
-        choices.add("2");
-        choices.add("3");
-        questions.add(new MultipleChoiceQuestion(2,"1 + 1 = " , choices,answers2,1));
-        ArrayList<String> answers3 = new ArrayList<>();
-        answers3.add("3");
-        questions.add(new PictureResponseQuestion(3 , "https://upload.wikimedia.org/wikipedia/commons/6/62/Eo_circle_red_number-3.svg" , answers3 , 1 ));
-        questions.add(new QuestionResponseQuestion(4,"what is 2 + 2 " , Arrays.asList(new String[]{"4"}), 1));
+        Quiz quiz = (Quiz) req.getSession().getAttribute("quiz");
+        ArrayList<IQuestion> questions = quiz.getQuestions();
+
 
         //todo:redirect to the result page and store result
         res.setContentType("text/html");
@@ -69,7 +59,11 @@ public class singlePageQuizServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         HttpSession sess = req.getSession();
-        int quiz_id  = (Integer) sess.getAttribute("quiz_id");
+        int quiz_id  = Integer.parseInt( (String)sess.getAttribute("quizId"));
+        QuizManager manager = (QuizManager) getServletContext().getAttribute("QuizManager");
+        Quiz quiz = manager.getQuizForWriting(quiz_id);
+        sess.setAttribute("quiz",quiz);
+
         
         RequestDispatcher dispatcher = req.getRequestDispatcher("/singlePageQuiz/singlePage.jsp");
         dispatcher.forward(req, resp);

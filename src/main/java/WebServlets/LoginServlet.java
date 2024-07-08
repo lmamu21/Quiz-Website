@@ -50,7 +50,7 @@ public class LoginServlet extends HttpServlet {
 
 
 
-        res.sendRedirect("/login");
+        res.sendRedirect("/Quiz_Web_war/login");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession sess = req.getSession();
         if(sess.getAttribute("loginStatus") != null && ((String)sess.getAttribute("loginStatus")).equals("loggedIn") ){
-            res.sendRedirect("/homepage");
+            res.sendRedirect("/Quiz_Web_war/homepage");
             return;
         }
         RequestDispatcher dispatcher = req.getRequestDispatcher("/login/index.jsp");
