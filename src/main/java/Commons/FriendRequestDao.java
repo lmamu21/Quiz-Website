@@ -25,9 +25,6 @@ public class FriendRequestDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            
-            stmt.executeQuery("USE " + databaseName);
-            
             String query = "INSERT INTO friend_request (from_username, to_username, status) VALUES (?, ?, ?);";
             PreparedStatement preparedStatement = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1,request.getFrom());
@@ -53,8 +50,6 @@ public class FriendRequestDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.executeQuery("USE " + databaseName);
-
             String query = "DELETE FROM friend_request WHERE id = ?;";
             PreparedStatement preparedStatement = con.prepareStatement(query);
             preparedStatement.setInt(1, requestId);
@@ -76,8 +71,6 @@ public class FriendRequestDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.executeQuery("USE " + databaseName);
-
             String query = "Select * from friend_requests WHERE to_username = " + username ;
 
 
@@ -104,8 +97,6 @@ public class FriendRequestDao {
             con = pool.getConnection();
             String query = "Select * from friend_requests WHERE to_username = " + user1 + " and from_username =" + user2 ;
             stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.executeQuery("USE " + databaseName);
-
             resultSet = stmt.executeQuery(query);
             if(resultSet != null)
                 request = fetchFriendRequest();

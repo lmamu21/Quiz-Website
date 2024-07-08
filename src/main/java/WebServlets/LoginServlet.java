@@ -31,6 +31,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             ans = manager.authenticateUser(username,password);
+            System.out.println(ans);
             if(ans) {
                 loginStatus = "loggedIn";
                 session.setAttribute("user_id" , manager.getID(username));

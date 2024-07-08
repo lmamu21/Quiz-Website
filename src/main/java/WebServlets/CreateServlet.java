@@ -31,7 +31,6 @@ public class CreateServlet extends HttpServlet {
                 System.out.println(s+": ");
             }
         }
-
         String username = request.getParameter("username");
         int user_id = Integer.parseInt(request.getParameter("user_id"));
         String quizName = request.getParameter("quiz-name");
@@ -156,7 +155,7 @@ public class CreateServlet extends HttpServlet {
             i++;
         }
         Quiz quiz = new Quiz(0, options, quizName, quizDescription, user_id, questions);
-        QuizManager quizManager = (QuizManager)getServletContext().getAttribute("quizManager");
+        QuizManager quizManager = (QuizManager)getServletContext().getAttribute("QuizManager");
         quizManager.addQuiz(quiz);
 
 

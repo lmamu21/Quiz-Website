@@ -1,11 +1,5 @@
-
-<%@ page import="java.util.List" %><%--
-  Created by IntelliJ IDEA.
-  User: luka
-  Date: 15.06.24
-  Time: 22:19
-  To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Commons.Quiz" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,8 +30,6 @@
                 <table class="quizzes-table">
                     <thead></thead>
                     <tbody>
-
-
                     </tbody>
                 </table>
             </div>
@@ -46,7 +38,14 @@
                 <table class="quizzes-table">
                     <thead></thead>
                        <tbody>
-                       <td><a> quiz #3 </a></td>
+                        <%
+                            ArrayList<Quiz> recents = (ArrayList<Quiz>) sess.getAttribute("recentQuizzes");
+
+                        %>
+                        <% for(Quiz q : recents) {
+                            out.println("<td><a href=\" " + "/SummaryPage?quizId="+q.getQuizID()+ "\"> "+q.getQuizName()+"</a></td>");
+
+                        }%>
                        </tbody>
                     </table>
             </div>
@@ -73,6 +72,7 @@
                         <img src="friend-add.svg" alt="friend icon" class="icon">
                         <div class="hover-content">
                             <h4>Friend Requests</h4>
+
 
                             <div class="friend-request">
                                 <p><strong><a>someone</a></strong> sent friend request</p>

@@ -1,4 +1,8 @@
 <%@ page import="Commons.User" %>
+
+<%
+    HttpSession sess = request.getSession();
+%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -52,12 +56,12 @@
                                                         String username = user.getUsername();
                                                         out.println(username);*/
                                                          //TODO user object is not set to HttpSession yet
-                                                         out.println("freeuni");%>"
+                                                         out.println(sess.getAttribute("username"));%>"
                    hidden>
             <input type="text" name="user_id" value="<% /*int user_id = user.getId();
                                                         out.println(user_id);*/
                                                         //TODO user object is not set to HttpSession yet
-                                                        out.println("1");%>"
+                                                        out.println(sess.getAttribute("user_id"));%>"
 
                    hidden>
             <input class="btn" type="submit">

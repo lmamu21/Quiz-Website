@@ -45,6 +45,7 @@ public class QuestionDao {
                 String answer = resultSet.getString("answer");
                 correctAnswers.add(answer);
             }
+            ps.close();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -83,6 +84,8 @@ public class QuestionDao {
                     }
                 }
             }
+            stmt.close();
+
 
         } catch (SQLException e) {
             e.getStackTrace();
@@ -110,6 +113,9 @@ public class QuestionDao {
             for(IQuestion question : questions)
                 question.fillAdditionalData(con);
 
+            stmt.close();
+
+
         } catch (SQLException e) {
             e.getStackTrace();
         } finally {
@@ -135,6 +141,7 @@ public class QuestionDao {
             stmt.executeQuery();
             stmt = question.prepareAdditionalDataAddStatement(con);
             stmt.executeQuery();
+            stmt.close();
         } catch (SQLException e) {
             e.getStackTrace();
         } finally {

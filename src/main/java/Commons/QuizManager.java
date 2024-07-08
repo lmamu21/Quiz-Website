@@ -16,8 +16,8 @@ public class QuizManager {
     public List<Quiz> getPopularQuizzes(int num){
         ArrayList<Quiz> list = (ArrayList<Quiz>) dao.getQuizzes();
         //todo
-        Collections.sort(list, (a, b) -> Integer.compare(0,0));
-        return list.subList(0,Math.min(list.size() - 1 , num - 1));
+       // Collections.sort(list, (a, b) -> Integer.compare(0,0));
+        return list;
     }
     public List<Quiz> getRecentQuizzes(int num){
         return dao.getRecentQuizzes(num);
@@ -30,6 +30,10 @@ public class QuizManager {
     public void addQuiz(Quiz quiz){
         dao.addQuiz(quiz);
     }
+
+    public Quiz getQuizForWriting(int quiz_id){
+        return dao.getQuizForWriting(quiz_id);
+    };
 
 
 }
