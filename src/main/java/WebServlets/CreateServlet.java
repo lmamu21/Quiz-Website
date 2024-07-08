@@ -41,7 +41,7 @@ public class CreateServlet extends HttpServlet {
         String quizDescription = request.getParameter("quiz-description");
         Quiz.QuizOptions random = request.getParameter("random") != null ? Quiz.QuizOptions.RANDOM_QUESTIONS : null;
         Quiz.QuizOptions immediate = request.getParameter("immediate") != null ? Quiz.QuizOptions.IMMEDIATE_CORRECTION : null;
-        Quiz.QuizOptions page_option = request.getParameter("page-option ").equals("one-page") ? Quiz.QuizOptions.ONE_PAGE : Quiz.QuizOptions.MULTIPLE_PAGES;
+        Quiz.QuizOptions page_option = request.getParameter("page-option").equals("one-page") ? Quiz.QuizOptions.ONE_PAGE : Quiz.QuizOptions.MULTIPLE_PAGES;
 
         ArrayList<Quiz.QuizOptions> options = new ArrayList<>();
         if(random != null){
@@ -81,7 +81,7 @@ public class CreateServlet extends HttpServlet {
 
                     j++;
                 }
-                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new MultipleChoiceQuestion(i, questionString, answers, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("image-response")){
@@ -105,7 +105,7 @@ public class CreateServlet extends HttpServlet {
 
                     j++;
                 }
-                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new PictureResponseQuestion(i, url, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("question-response")){
@@ -128,7 +128,7 @@ public class CreateServlet extends HttpServlet {
 
                     j++;
                 }
-                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new QuestionResponseQuestion(i, questionString, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("fill-in-the-blank")){
@@ -152,7 +152,7 @@ public class CreateServlet extends HttpServlet {
 
                     j++;
                 }
-                int mark = Integer.parseInt(request.getParameter("question-"+i+"mark"));
+                int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new FillTheBlankQuestion(i, before , after , correctAnswers, mark);
                 questions.add(question);
             }
