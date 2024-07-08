@@ -124,7 +124,7 @@ public class QuestionResponseQuestion implements IQuestion {
         String query = "INSERT INTO " + tableName + " (quiz_id, question_index, question, mark) VALUES (?, ?, ?, ?)";
         PreparedStatement ps = null;
         try {
-            ps = con.prepareStatement(query);
+            ps = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, quizId);
             ps.setInt(2, index);
             ps.setString(3, question);
@@ -139,6 +139,10 @@ public class QuestionResponseQuestion implements IQuestion {
     @Override
     public PreparedStatement prepareAdditionalDataAddStatement(Connection con) {
         PreparedStatement ps = null;
+        System.out.println("here");
+        for(String correctAnswer : correctAnswers){
+            System.out.println(correctAnswer);
+        }
         try {
 
             for (String correctAnswer : correctAnswers) {
@@ -146,10 +150,12 @@ public class QuestionResponseQuestion implements IQuestion {
                 ps = con.prepareStatement(correctQuery, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, Id);
                 ps.setString(2, correctAnswer);
+                System.out.println(ps.toString());
                 ps.executeUpdate();
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 

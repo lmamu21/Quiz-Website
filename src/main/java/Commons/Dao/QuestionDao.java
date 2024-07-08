@@ -117,13 +117,13 @@ public class QuestionDao {
         try {
             con = pool.getConnection();
             PreparedStatement pstmt = question.prepareAddStatement(con);
-            System.out.println(pstmt.toString());
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
             if(rs.next()){
                 question.setId(rs.getInt(1));
             }
             question.prepareAdditionalDataAddStatement(con);
+
 
             pstmt.close();
         } catch (SQLException e) {
