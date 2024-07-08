@@ -25,6 +25,7 @@ public class OptionDao {
     }
 
     private synchronized Quiz.QuizOptions fetchOption() {
+
         return null;
     }
 
@@ -34,25 +35,26 @@ public class OptionDao {
     public synchronized List<Quiz.QuizOptions> getOptions(int quiz_id){
         con = null;
         ArrayList<Quiz.QuizOptions> res = new ArrayList<Quiz.QuizOptions>();
-        try {
-            con = pool.getConnection();
-            stmt = con.createStatement();
-            String query = String.format("SELECT * FROM quizzes WHERE quiz_id = \'%d\' ",quiz_id );
-            stmt.executeQuery(query);
-            while(resultSet.next()){
-                res.add(fetchOption());
-            }
-            stmt.close();
-        } catch (SQLException e) {
-            e.getStackTrace();
-        } finally {
-            if (con != null) try {
-                // Returns the connection to the pool.
-                con.close();
-            } catch (Exception ignored) {
-            }
-        }
         return res;
+//        try {
+//            con = pool.getConnection();
+//            stmt = con.createStatement();
+//            String query = String.format("SELECT * FROM quiz_options WHERE quiz_id = \'%d\' ",quiz_id );
+//            resultSet=stmt.executeQuery(query);
+//            while(resultSet.next()){
+//                res.add(fetchOption());
+//            }
+//            stmt.close();
+//        } catch (SQLException e) {
+//            e.getStackTrace();
+//        } finally {
+//            if (con != null) try {
+//                // Returns the connection to the pool.
+//                con.close();
+//            } catch (Exception ignored) {
+//            }
+//        }
+//        return res;
     }
 
 

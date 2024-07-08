@@ -2,10 +2,8 @@ package Commons.Questions;
 
 import Commons.Interfaces.IQuestion;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PictureResponseQuestion implements IQuestion {
@@ -105,7 +103,17 @@ public class PictureResponseQuestion implements IQuestion {
 
     @Override
     public void fillAdditionalData(Connection con) {
-        //nothing here
+        String query = "SELECT correct_answer FROM " + tableName+"_correct_answer"+  " WHERE question_id = " + Id;
+        correctAnswers = new ArrayList<String>();
+        try  {
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                correctAnswers.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -126,7 +134,23 @@ public class PictureResponseQuestion implements IQuestion {
 
     @Override
     public PreparedStatement prepareAdditionalDataAddStatement(Connection con) {
-        return null;
+        PreparedStatement ps = null;
+        try {
+
+            for (String correctAnswer : correctAnswers) {
+                String correctQuery = "INSERT INTO "+tableName+"_correct_answer"+" (question_id,correct_answer) VALUES (?, ?) ";
+                ps = con.prepareStatement(correctQuery, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, Id);
+                ps.setString(2, correctAnswer);
+                ps.executeUpdate();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ps;
+
     }
 
 

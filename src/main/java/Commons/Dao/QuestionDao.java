@@ -60,22 +60,27 @@ public class QuestionDao {
     }
     public synchronized List<IQuestion> getQuestions(int quiz_id){
         con = null;
-        List<IQuestion> questions =  new ArrayList<IQuestion>();
+        ArrayList<IQuestion> questions =  new ArrayList<IQuestion>();
         try {
             con = pool.getConnection();
-            stmt = con.createStatement();
-            for(String tableName: tablenames){
-                String query ="SELECT * FROM "+ tableName + "WHERE quiz_id = " + quiz_id;
-                stmt.executeQuery(query);
+            for(String tableName : tablenames){
+
+                String query ="SELECT * FROM "+ tableName + " WHERE quiz_id = " + quiz_id;
+                System.out.println("tablename: "+tableName);
+                System.out.println(query);
+                PreparedStatement pstmt = con.prepareStatement(query);
+                resultSet = pstmt.executeQuery();
+
+                System.out.println(resultSet.toString());
                 while(resultSet.next()){
                     switch (tableName){
                         case QuestionResponseQuestion.tableName:
                             questions.add(fetchQuestionResponse());
                             break;
-                        case    MultipleChoiceQuestion.tableName:
+                        case    PictureResponseQuestion.tableName:
                             questions.add(fetchPictureResponse());
                             break;
-                        case PictureResponseQuestion.tableName:
+                        case MultipleChoiceQuestion.tableName:
                             questions.add(fetchMultipleChoice());
                             break;
                         case FillTheBlankQuestion.tableName:
@@ -84,12 +89,15 @@ public class QuestionDao {
                     }
                 }
             }
-            stmt.close();
-
+            //stmt.close();
+            for(IQuestion q : questions)
+                q.fillAdditionalData(con);
 
         } catch (SQLException e) {
-            e.getStackTrace();
-        } finally {
+            e.printStackTrace();
+
+        }
+        finally {
             if (con != null) try {
                 // Returns the connection to the pool.
                 con.close();
@@ -97,34 +105,6 @@ public class QuestionDao {
             }
         }
 
-        try {
-            con = pool.getConnection();
-            stmt = con.createStatement();
-            for(IQuestion question : questions){
-                int indx = question.getIndex();
-                int quizId= question.getQuizId();
-                resultSet = stmt.executeQuery("SELECT id FROM " + question.getTableName() + " WHERE quiz_id  = "  + quizId  + " and question_index = "  + indx);
-                if(resultSet.next()){
-                    question.setId(resultSet.getInt("id"));
-                }
-            }
-            for(IQuestion question : questions)
-                question.setCorrectAnswers(getCorrectAnswers(question.getId(),question.getTableName()));
-            for(IQuestion question : questions)
-                question.fillAdditionalData(con);
-
-            stmt.close();
-
-
-        } catch (SQLException e) {
-            e.getStackTrace();
-        } finally {
-            if (con != null) try {
-                // Returns the connection to the pool.
-                con.close();
-            } catch (Exception ignored) {
-            }
-        }
 
 
         return questions;
@@ -136,12 +116,16 @@ public class QuestionDao {
         ArrayList<Quiz> res = new ArrayList<Quiz>();
         try {
             con = pool.getConnection();
-            stmt = con.createStatement();
-            PreparedStatement stmt = question.prepareAddStatement(con);
-            stmt.executeQuery();
-            stmt = question.prepareAdditionalDataAddStatement(con);
-            stmt.executeQuery();
-            stmt.close();
+            PreparedStatement pstmt = question.prepareAddStatement(con);
+            System.out.println(pstmt.toString());
+            pstmt.executeUpdate();
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if(rs.next()){
+                question.setId(rs.getInt(1));
+            }
+            question.prepareAdditionalDataAddStatement(con);
+
+            pstmt.close();
         } catch (SQLException e) {
             e.getStackTrace();
         } finally {

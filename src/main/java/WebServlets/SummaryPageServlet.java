@@ -27,6 +27,7 @@ public class SummaryPageServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         String quizIdParam = req.getParameter("quizId");
+        session.setAttribute("quizId",quizIdParam);
         if (quizIdParam == null || quizIdParam.isEmpty()) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Missing quizId parameter");
             return;
@@ -41,6 +42,11 @@ public class SummaryPageServlet extends HttpServlet {
         QuizManager quizManager = (QuizManager) servletContext.getAttribute("QuizManager");
         AccountManager accountManager = (AccountManager) servletContext.getAttribute("AccountManager") ;
         Quiz quiz = quizManager.getQuizForWriting(quizId);
+
+        System.out.println("question count : " + quiz.getQuestions().size());
+
+
+        req.setAttribute("quiz",quiz);
         try {
             String quizDescription = quiz.getQuizDescription();
             String creatorUserId = String.valueOf(quiz.getCreatorID());
@@ -58,7 +64,7 @@ public class SummaryPageServlet extends HttpServlet {
             req.setAttribute("summaryStats", summaryStats);
 
             // Forward to JSP for rendering
-            RequestDispatcher dispatcher = req.getRequestDispatcher("/quizSummary.jsp");
+            RequestDispatcher dispatcher = req.getRequestDispatcher("/quiz-summary/summary.jsp");
             dispatcher.forward(req, resp);
 
 

@@ -2,10 +2,7 @@ package Commons.Questions;
 
 import Commons.Interfaces.IQuestion;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,14 +109,25 @@ public class MultipleChoiceQuestion implements IQuestion {
 
     @Override
     public void fillAdditionalData(Connection con) {
-        String query = "INSERT INTO " + OptionAnswersTableName + " (question_id, option_answer) VALUES (?, ?)";
+        String query = "SELECT correct_answer FROM " + tableName+"_correct_answer"+  " WHERE question_id = " + Id;
+        correctAnswers = new ArrayList<String>();
         try  {
             PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                correctAnswers.add(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
-            for (String optionAnswer : OptionAnsers) {
-                ps.setInt(1, Id);
-                ps.setString(2, optionAnswer);
-                ps.executeUpdate();
+        query = "SELECT option_answer FROM " + OptionAnswersTableName +  " WHERE question_id = " + Id;
+        OptionAnsers = new ArrayList<String>();
+        try  {
+            PreparedStatement ps = con.prepareStatement(query);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next()){
+                OptionAnsers.add(rs.getString(1));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -132,7 +140,7 @@ public class MultipleChoiceQuestion implements IQuestion {
         String query = "INSERT INTO " + tableName + " (quiz_id, question_index, question, mark) VALUES (?, ?, ?, ?)";
         PreparedStatement ps = null;
         try {
-            ps = con.prepareStatement(query);
+            ps = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, quizId);
             ps.setInt(2, index);
             ps.setString(3, question);
@@ -145,18 +153,33 @@ public class MultipleChoiceQuestion implements IQuestion {
 
     @Override
     public PreparedStatement prepareAdditionalDataAddStatement(Connection con) {
-                            String query = "INSERT INTO " + OptionAnswersTableName + " (question_id, option_answer) VALUES (?, ?)";
+        System.out.println("correct answers : " + correctAnswers.size() );
+        System.out.println("option answers : " + OptionAnsers.size() );
+
+
         PreparedStatement ps = null;
         try {
             for (String optionAnswer : OptionAnsers) {
-                ps = con.prepareStatement(query);
+                String query = "INSERT INTO " + OptionAnswersTableName + " (question_id, option_answer) VALUES (?, ?)";
+                ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, Id);
                 ps.setString(2, optionAnswer);
+                System.out.println(ps.toString());
                 ps.executeUpdate();
             }
+            for (String correctAnswer : correctAnswers) {
+                String correctQuery = "INSERT INTO "+ tableName + "_correct_answer" +" (question_id,correct_answer) VALUES (?, ?) ";
+                ps = con.prepareStatement(correctQuery, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, Id);
+                ps.setString(2, correctAnswer);
+                System.out.println(ps.toString());
+                ps.executeUpdate();
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return ps;
     }
 
