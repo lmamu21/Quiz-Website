@@ -33,6 +33,7 @@ public class LoginServlet extends HttpServlet {
             ans = manager.authenticateUser(username,password);
             if(ans) {
                 loginStatus = "loggedIn";
+                session.setAttribute("user_id" , manager.getID(username));
                 session.setAttribute("loginStatus",loginStatus);
                 session.setAttribute("username",username);
             }else {

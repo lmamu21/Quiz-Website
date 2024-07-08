@@ -1,9 +1,6 @@
 package Commons.Dao;
 
-import Commons.Dao.OptionDao;
-import Commons.Dao.QuestionDao;
 import Commons.Interfaces.IQuestion;
-import Commons.Question;
 import Commons.Quiz;
 
 import javax.sql.DataSource;
@@ -34,7 +31,6 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
 
             String query = "INSERT INTO quizzes (quiz_name, quiz_description, creator) VALUES (?, ?, ?)";
 
@@ -82,7 +78,7 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
+
             String query = "SELECT * FROM quizzes WHERE  quiz_id = " + quiz_id;
             resultSet = stmt.executeQuery(query);
             if(resultSet.next()){
@@ -110,7 +106,7 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
+
             String query = "SELECT * FROM quizzes WHERE quiz_id = " + quiz_id;
             resultSet = stmt.executeQuery(query);
             if(resultSet.next()){
@@ -134,7 +130,7 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
+
             String query = "SELECT * FROM quizzes ";
             resultSet = stmt.executeQuery(query);
             while(resultSet.next()){
@@ -158,7 +154,7 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
+
             String query = "SELECT * FROM quizzes  ORDER BY created_at DESC";
             resultSet = stmt.executeQuery(query);
             while(resultSet.next() && res.size() < maxCount){
@@ -183,7 +179,7 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
+
             String query = "SELECT * FROM quizzes WHERE creator = " + user_id;
             resultSet = stmt.executeQuery(query);
             while(resultSet.next()){
