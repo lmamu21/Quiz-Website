@@ -19,10 +19,6 @@ import javax.servlet.RequestDispatcher;
 @WebServlet("/SummaryPage")
 public class SummaryPageServlet extends HttpServlet {
 
-
-
-
-
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException, RuntimeException{
         ServletContext servletContext = getServletContext();
 

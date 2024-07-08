@@ -8,10 +8,11 @@ import java.util.Map;
 
 public class AccountManager {
     private byte[] salt;
-    DBConnection dbCon;
 
-    public AccountManager(String database){
-        dbCon = new DBConnection(database);
+    private AccountManagerDAO accountManagerDAO;
+
+    public AccountManager(AccountManagerDAO accountManagerDAO){
+       this.accountManagerDAO=accountManagerDAO;
     }
 
     public boolean registerUser(String username, String password) throws NoSuchAlgorithmException {
@@ -19,14 +20,14 @@ public class AccountManager {
         String hashedPassword = passwordToHash(password,salt);
         String saltString = hexToString(salt);
         System.out.println(saltString);
-        return  dbCon.addUser(username, hashedPassword, hexToString(salt));
+        return  accountManagerDAO.addUser(username, hashedPassword, hexToString(salt));
     }
 
 
     public boolean authenticateUser(String username,String password) throws Exception {
-        byte[] salt = hexToArray(dbCon.getSalt(username));
+        byte[] salt = hexToArray(accountManagerDAO.getSalt(username));
 
-        String hashedPassword = dbCon.getPasswordHash(username);
+        String hashedPassword = accountManagerDAO.getPasswordHash(username);
 
         return passwordToHash(password, salt).equals(hashedPassword);
     }
@@ -35,7 +36,7 @@ public class AccountManager {
         // TODO: user should enter current password and new password and it should be validated
         byte[] salt = generateSalt();
         String newPasswordHash = passwordToHash(newPassword, salt);
-        dbCon.changePassword(username, newPassword, hexToString(salt));
+        accountManagerDAO.changePassword(username, newPassword, hexToString(salt));
     }
 
     private static String passwordToHash(String password,byte[] salt) throws NoSuchAlgorithmException {
