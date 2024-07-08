@@ -164,7 +164,6 @@ public class MultipleChoiceQuestion implements IQuestion {
                 ps = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, Id);
                 ps.setString(2, optionAnswer);
-                System.out.println(ps.toString());
                 ps.executeUpdate();
             }
             for (String correctAnswer : correctAnswers) {
@@ -177,6 +176,7 @@ public class MultipleChoiceQuestion implements IQuestion {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 

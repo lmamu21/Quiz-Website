@@ -80,6 +80,7 @@ public class CreateServlet extends HttpServlet {
                 for(String ans : answers)
                     System.out.println(ans);
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
+                System.out.println("correct answer size " + correctAnswers.size());
                 question = new MultipleChoiceQuestion(i, questionString, answers, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("image-response")){
@@ -88,7 +89,7 @@ public class CreateServlet extends HttpServlet {
                 ArrayList<String> answers = new ArrayList<>();
                 ArrayList<String> correctAnswers = new ArrayList<>();
 
-                int j = 0;
+                int j = 1;
                 while(true){
                     String choiceString = request.getParameter("question-"+i+"-choice-"+j);
                     if(choiceString == null){
@@ -97,12 +98,13 @@ public class CreateServlet extends HttpServlet {
 
                     answers.add(choiceString);
 
-                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                    if(request.getParameter("question-"+i+"-answer-"+j+"-isCorrect") != null){
                         correctAnswers.add(choiceString);
                     }
 
                     j++;
                 }
+                System.out.println("correct answer size " + correctAnswers.size());
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new PictureResponseQuestion(i, url, correctAnswers, mark);
                 questions.add(question);
@@ -111,7 +113,7 @@ public class CreateServlet extends HttpServlet {
                 ArrayList<String> answers = new ArrayList<>();
                 ArrayList<String> correctAnswers = new ArrayList<>();
 
-                int j = 0;
+                int j = 1;
                 while(true){
                     String choiceString = request.getParameter("question-"+i+"-choice-"+j);
                     if(choiceString == null){
@@ -120,13 +122,14 @@ public class CreateServlet extends HttpServlet {
 
                     answers.add(choiceString);
 
-                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                    if(request.getParameter("question-"+i+"-answer-"+j+"-isCorrect") != null){
                         correctAnswers.add(choiceString);
                     }
 
                     j++;
                 }
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
+                System.out.println("correct answer size " + correctAnswers.size());
                 question = new QuestionResponseQuestion(i, questionString, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("fill-in-the-blank")){
@@ -144,12 +147,13 @@ public class CreateServlet extends HttpServlet {
 
                     answers.add(choiceString);
 
-                    if(request.getParameter("question-"+i+"-choice-"+j+"-isCorrect") != null){
+                    if(request.getParameter("question-"+i+"-answer-"+j+"-isCorrect") != null){
                         correctAnswers.add(choiceString);
                     }
 
                     j++;
                 }
+                System.out.println("correct answer size " + correctAnswers.size());
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new FillTheBlankQuestion(i, before , after , correctAnswers, mark);
                 questions.add(question);

@@ -121,7 +121,7 @@ public class PictureResponseQuestion implements IQuestion {
         String query = "INSERT INTO " + tableName + " (quiz_id, question_index, img_url, mark) VALUES (?, ?, ?, ?)";
         PreparedStatement ps = null;
         try {
-            ps = con.prepareStatement(query);
+            ps = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, quizId);
             ps.setInt(2, index);
             ps.setString(3, ImgUrl);
@@ -142,10 +142,12 @@ public class PictureResponseQuestion implements IQuestion {
                 ps = con.prepareStatement(correctQuery, Statement.RETURN_GENERATED_KEYS);
                 ps.setInt(1, Id);
                 ps.setString(2, correctAnswer);
+                System.out.println(ps.toString());
                 ps.executeUpdate();
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 

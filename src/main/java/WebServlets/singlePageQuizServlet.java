@@ -46,7 +46,7 @@ public class singlePageQuizServlet extends HttpServlet {
         for(int i = 0 ; i < questions.size() ; i ++) {
             out.println("<h1>");
             out.println(req.getParameter("" + (i + 1)));
-          out.println( questions.get(i).check(req.getParameter("" + (i + 1))));
+              out.println( questions.get(i).check(req.getParameter("" + questions.get(i).getIndex())));
             out.println("</h1>");
         }
 

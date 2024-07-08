@@ -49,6 +49,11 @@ public class RegisterServlet extends HttpServlet {
             registerStatus = "loggedIn";
             session.setAttribute("loginStatus",registerStatus);
             session.setAttribute("username", username);
+            try {
+                session.setAttribute("user_id",String.valueOf(manager.getID(username)));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             res.sendRedirect("/Quiz_Web_war/homepage");
         }else {
             registerStatus = "already used";
