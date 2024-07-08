@@ -1,5 +1,8 @@
-<%@ page import="Commons.DBConnection" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="Commons.QuizManager" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Commons.Quiz" %>
+<%@ page import="Commons.Interfaces.IQuestion" %><%--<%--
+
   Created by IntelliJ IDEA.
   User: luka
   Date: 15.06.24
@@ -35,15 +38,13 @@
                 <table class="quizzes-table">
                     <thead></thead>
                     <tbody>
-
                         <%
-                            DBConnection con = new DBConnection("quiz_test");
-                            int maxCount = 3;
-                            List<Integer> popQuizList = con.getPopularQuizzes(maxCount);
+
+                            List<Quiz> popQuizList =(List<Quiz>) request.getAttribute("PopularQuizList");
                             int counter = 1;
-                            for(int i : popQuizList){
+                            for(Quiz q : popQuizList){
                         %>
-                            <tr><td><%= counter%> </td><td><a> <%= con.getQuizName(i)%></a></td></tr>
+                            <tr><a href="SummaryPageServlet?quiz_id=<%= q.getQuizID() %>"><%= q.getQuizName() %></a></tr>
                         <%
                                 counter++;
                             }
@@ -57,14 +58,14 @@
                     <thead></thead>
                        <tbody>
                        <%
-                           List<Integer> recentlyAdded = con.getRecentlyAddedQuizzes(maxCount);
-                           counter = 1;
-                           for(int i : recentlyAdded){
+                           //List<Integer> recentlyAdded = con.getRecentlyAddedQuizzes(maxCount);
+                           //counter = 1;
+                           //for(int i : recentlyAdded){
                        %>
-                       <tr><td><%= counter%> </td><td><a> <%= con.getQuizName(i)%></a></td></tr>
+
                        <%
-                               counter++;
-                           }
+
+
                        %>
                        </tbody>
                     </table>
@@ -93,16 +94,16 @@
                         <div class="hover-content">
                             <h4>Friend Requests</h4>
                             <%
-                                String curUser = "";
-                                List<String> friendRequestUsernames = con.getFriendRequestUsernames(curUser);
-                                for(String username : friendRequestUsernames){
+                                //String curUser = "";
+                               // List<String> friendRequestUsernames = con.getFriendRequestUsernames(curUser);
+                                //for(String username : friendRequestUsernames){
                             %>
                             <div class="friend-request">
-                                <p><strong><a><%= username%></a></strong> sent friend request</p>
+                                <p><strong><a>username</a></strong> sent friend request</p>
                                 <button class="friend-request-btn accept-button">Accept</button>
                                 <button class="friend-request-btn reject-button">Decline</button>
                             </div>
-                            <% }%>
+                            <%// }%>
 
                         </div>
                     </div>

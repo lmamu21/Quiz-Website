@@ -23,7 +23,6 @@ public class SummaryPageDAO {
             con = pool.getConnection();
 
             Statement statement = con.createStatement();
-            statement.executeQuery("USE " + databaseName);
             String query = "SELECT quiz_description FROM quizzes WHERE quiz_id = ?";
 
             PreparedStatement preparedStatement = con.prepareStatement(query);
@@ -84,7 +83,6 @@ public class SummaryPageDAO {
             connection = pool.getConnection();
 
             Statement statement = connection.createStatement();
-            statement.executeQuery("USE " + databaseName);
             String query = "SELECT username FROM users WHERE user_id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, userId);
@@ -119,7 +117,6 @@ public class SummaryPageDAO {
             connection = pool.getConnection();
 
             Statement statement = connection.createStatement();
-            statement.executeQuery("USE " + databaseName);
             String sql = "SELECT * FROM QuizAttempts WHERE UserID = ? AND QuizID = ? ORDER BY " + orderBy;
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, userId);
@@ -151,7 +148,6 @@ public class SummaryPageDAO {
             connection = pool.getConnection();
 
             Statement statement = connection.createStatement();
-            statement.executeQuery("USE " + databaseName);
 
             if (!attempt.isValid()) {
                 throw new IllegalArgumentException("Invalid quiz attempt data");
@@ -187,9 +183,6 @@ public class SummaryPageDAO {
             connection = pool.getConnection();
 
             Statement statement = connection.createStatement();
-            statement.executeQuery("USE " + databaseName);
-
-
             String sql = "SELECT * FROM QuizAttempts WHERE QuizID = ? ORDER BY AttemptDate DESC LIMIT 10";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, quizId);
@@ -220,7 +213,6 @@ public class SummaryPageDAO {
         try {
             connection = pool.getConnection();
             Statement statement = connection.createStatement();
-            statement.executeQuery("USE " + databaseName);
             String sql = "SELECT UserID, MAX(PercentCorrect) AS BestScore FROM QuizAttempts WHERE QuizID = ? GROUP BY UserID ORDER BY BestScore DESC LIMIT 10";
 
            PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -260,7 +252,6 @@ public class SummaryPageDAO {
         try {
             connection = pool.getConnection();
             Statement statement = connection.createStatement();
-            statement.executeQuery("USE " + databaseName);
             String sql = "SELECT UserID, MAX(PercentCorrect) AS BestScore FROM QuizAttempts WHERE QuizID = ? AND AttemptDate > NOW() - INTERVAL '1 day' GROUP BY UserID ORDER BY BestScore DESC LIMIT 10";
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setInt(1, quizId);
@@ -295,7 +286,6 @@ public class SummaryPageDAO {
         try {
             connection = pool.getConnection();
             Statement statement = connection.createStatement();
-            statement.executeQuery("USE " + databaseName);
             String sql = "SELECT COUNT(*) as TotalAttempts, AVG(PercentCorrect) AS AverageScore, "+
                     "MAX(PercentCorrect) as HighestScore, MIN(PercentCorrect) as LowestScore, "+
                     "AVG(TIME_TO_SEC(TimeTaken)) AS AverageTimeSpent"+
