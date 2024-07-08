@@ -77,10 +77,7 @@ public class CreateServlet extends HttpServlet {
 
                     j++;
                 }
-                for(String ans : answers)
-                    System.out.println(ans);
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
-                System.out.println("correct answer size " + correctAnswers.size());
                 question = new MultipleChoiceQuestion(i, questionString, answers, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("image-response")){
@@ -104,7 +101,6 @@ public class CreateServlet extends HttpServlet {
 
                     j++;
                 }
-                System.out.println("correct answer size " + correctAnswers.size());
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new PictureResponseQuestion(i, url, correctAnswers, mark);
                 questions.add(question);
@@ -129,7 +125,6 @@ public class CreateServlet extends HttpServlet {
                     j++;
                 }
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
-                System.out.println("correct answer size " + correctAnswers.size());
                 question = new QuestionResponseQuestion(i, questionString, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("fill-in-the-blank")){
@@ -153,7 +148,6 @@ public class CreateServlet extends HttpServlet {
 
                     j++;
                 }
-                System.out.println("correct answer size " + correctAnswers.size());
                 int mark = Integer.parseInt(request.getParameter("question-"+i+"-mark"));
                 question = new FillTheBlankQuestion(i, before , after , correctAnswers, mark);
                 questions.add(question);
