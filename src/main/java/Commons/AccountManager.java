@@ -38,6 +38,10 @@ public class AccountManager {
         dbCon.changePassword(username, newPassword, hexToString(salt));
     }
 
+    public String getID(String username) throws Exception{
+        return  dbCon.getID(username);
+    }
+
     private static String passwordToHash(String password,byte[] salt) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA");
         md.update(salt);
@@ -71,6 +75,8 @@ public class AccountManager {
         }
         return result;
     }
+
+
 
 
 }

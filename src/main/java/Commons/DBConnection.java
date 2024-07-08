@@ -189,7 +189,7 @@ public class DBConnection {
         return false;
     }
 
-    private String getID(String username) {
+    public String getID(String username) {
         String query = String.format("SELECT user_id FROM users WHERE username = \'%s\'", username);
         String result = "";
         try {

@@ -1,7 +1,6 @@
 package Commons.Dao;
 
 import Commons.Interfaces.IQuestion;
-import Commons.Question;
 import Commons.Questions.FillTheBlankQuestion;
 import Commons.Questions.MultipleChoiceQuestion;
 import Commons.Questions.PictureResponseQuestion;
@@ -22,6 +21,7 @@ public class QuestionDao {
     private String databaseName;
     private List<String> tablenames;
     private static String correctAnswerTableName = "correct_answers";
+
     public QuestionDao(DataSource pool, String databaseName) {
         this.pool = pool;
         this.databaseName = databaseName;
@@ -31,11 +31,13 @@ public class QuestionDao {
         tablenames.add(PictureResponseQuestion.tableName);
         tablenames.add(QuestionResponseQuestion.tableName);
     }
-    public synchronized List<String> getCorrectAnswers(int question_id){
+
+    //correct answers are stored in different tables with prefix of question table name and then _correct_answer example : multiple_choice_correct_answers
+    public synchronized List<String> getCorrectAnswers(int question_id,String tableName){
         List<String> correctAnswers = new ArrayList<>();
         try {
             con = pool.getConnection();
-            String query = "SELECT answer FROM " + correctAnswerTableName + " WHERE question_id = ?";
+            String query = "SELECT answer FROM " + tableName + "_" +correctAnswerTableName + " WHERE question_id = ?";
             PreparedStatement ps = con.prepareStatement(query);
             ps.setInt(1, question_id);
             resultSet = ps.executeQuery();
@@ -61,8 +63,6 @@ public class QuestionDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
-
             for(String tableName: tablenames){
                 String query ="SELECT * FROM "+ tableName + "WHERE quiz_id = " + quiz_id;
                 stmt.executeQuery(query);
@@ -97,7 +97,6 @@ public class QuestionDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-            stmt.executeQuery("USE " + databaseName);
             for(IQuestion question : questions){
                 int indx = question.getIndex();
                 int quizId= question.getQuizId();
@@ -107,7 +106,7 @@ public class QuestionDao {
                 }
             }
             for(IQuestion question : questions)
-                question.setCorrectAnswers(getCorrectAnswers(question.getId()));
+                question.setCorrectAnswers(getCorrectAnswers(question.getId(),question.getTableName()));
             for(IQuestion question : questions)
                 question.fillAdditionalData(con);
 
