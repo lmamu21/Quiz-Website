@@ -1,5 +1,7 @@
 package Commons.Dao;
 
+import Commons.Dao.OptionDao;
+import Commons.Dao.QuestionDao;
 import Commons.Interfaces.IQuestion;
 import Commons.Quiz;
 
@@ -31,9 +33,7 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-
             String query = "INSERT INTO quizzes (quiz_name, quiz_description, creator) VALUES (?, ?, ?)";
-
             PreparedStatement ps = con.prepareStatement(query);
             ps.setString(1, quiz.getQuizName());
             ps.setString(2, quiz.getQuizDescription());
@@ -41,12 +41,10 @@ public class QuizDao {
             int ID = -1;
             int rowsInserted = ps.executeUpdate();
             if (rowsInserted > 0) {
-
                 resultSet = ps.getGeneratedKeys();
                 ID = resultSet.getInt("quiz_id");
                 System.out.println("A new quiz was inserted successfully!");
             }
-
 
             if(ID != -1){
                 //updating question tables;
@@ -58,6 +56,7 @@ public class QuizDao {
                 for(Quiz.QuizOptions o : qo)
                     optionDao.addOption(o,ID);
             }
+            stmt.close();
 
 
 
@@ -78,12 +77,13 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-
             String query = "SELECT * FROM quizzes WHERE  quiz_id = " + quiz_id;
             resultSet = stmt.executeQuery(query);
             if(resultSet.next()){
                 res = fetchQuiz();
             }
+            stmt.close();
+
 
         } catch (SQLException e) {
             e.getStackTrace();
@@ -106,13 +106,12 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-
             String query = "SELECT * FROM quizzes WHERE quiz_id = " + quiz_id;
             resultSet = stmt.executeQuery(query);
             if(resultSet.next()){
                 res  = fetchQuiz();
             }
-
+            stmt.close();
         } catch (SQLException e) {
             e.getStackTrace();
         } finally {
@@ -130,12 +129,12 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-
             String query = "SELECT * FROM quizzes ";
             resultSet = stmt.executeQuery(query);
             while(resultSet.next()){
                 res.add(fetchQuiz());
             }
+            stmt.close();
 
         } catch (SQLException e) {
             e.getStackTrace();
@@ -154,12 +153,12 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-
             String query = "SELECT * FROM quizzes  ORDER BY created_at DESC";
             resultSet = stmt.executeQuery(query);
             while(resultSet.next() && res.size() < maxCount){
                 res.add(fetchQuiz());
             }
+            stmt.close();
 
         } catch (SQLException e) {
             e.getStackTrace();
@@ -179,12 +178,13 @@ public class QuizDao {
         try {
             con = pool.getConnection();
             stmt = con.createStatement();
-
             String query = "SELECT * FROM quizzes WHERE creator = " + user_id;
             resultSet = stmt.executeQuery(query);
             while(resultSet.next()){
                 res.add(fetchQuiz());
             }
+            stmt.close();
+
 
         } catch (SQLException e) {
             e.getStackTrace();

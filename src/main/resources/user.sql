@@ -54,4 +54,24 @@ CREATE TABLE multiple_choice_answers (
     question_id INT NOT NULL,
     correct_answer BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
-)
+);
+
+CREATE TABLE QuizAttempts (
+    AttemptID SERIAL PRIMARY KEY,
+    QuizID INT NOT NULL,
+    UserID INT NOT NULL,
+    AttemptDate TIMESTAMP NOT NULL DEFAULT NOW(),
+    TimeTaken INT NOT NULL,
+    PercentCorrect DECIMAL(5, 2) NOT NULL,
+    FOREIGN KEY (QuizID) REFERENCES Quizzes(QuizID),
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+);
+
+-- Table to store summary statistics for each quiz
+CREATE TABLE PerformanceStats (
+    StatID SERIAL PRIMARY KEY,
+    QuizID INT NOT NULL,
+    AverageScore DECIMAL(5, 2) NOT NULL,
+    TotalAttempts INT NOT NULL,
+    FOREIGN KEY (QuizID) REFERENCES Quizzes(QuizID)
+);

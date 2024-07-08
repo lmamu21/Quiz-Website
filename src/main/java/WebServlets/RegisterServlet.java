@@ -1,6 +1,7 @@
 package WebServlets;
 import Commons.AccountManager;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -21,36 +22,38 @@ public class RegisterServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         String repeatPassword = req.getParameter("repeat-password");
-        AccountManager manager = (AccountManager) getServletContext().getAttribute("AccountManager");
-
+        ServletContext servletContext = getServletContext();
+        AccountManager manager = (AccountManager) servletContext.getAttribute("AccountManager");
+        if(manager==null){
+            System.out.println("manager is null");
+        }
         HttpSession session = req.getSession();
         String registerStatus = "";
 
 
         if(!password.equals(repeatPassword)){
             session.setAttribute("registerStatus", "no match");
-            res.sendRedirect("/register");
+            res.sendRedirect("/Quiz_Web_war/register");
             return;
         }
 
         boolean ans = false;
         PrintWriter writer = res.getWriter();
-
         try {
             ans = manager.registerUser(username,password);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if(ans){
             registerStatus = "loggedIn";
             session.setAttribute("loginStatus",registerStatus);
             session.setAttribute("username", username);
-            res.sendRedirect("/homepage");
+            res.sendRedirect("/Quiz_Web_war/homepage");
         }else {
             registerStatus = "already used";
             session.setAttribute("registerStatus",registerStatus);
-            res.sendRedirect("/register");
+            res.sendRedirect("/Quiz_Web_war/register");
         }
     }
 
