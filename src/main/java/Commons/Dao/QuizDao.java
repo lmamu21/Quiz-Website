@@ -81,8 +81,32 @@ public class QuizDao {
     public synchronized void removeQuiz(){
 
     }
-    public synchronized List<Quiz> getUsersQuizzes(int user_id){
-        return null;
+
+
+    public synchronized List<Quiz> getUsersQuizzes(int user_id, int maxNumber){
+        con = null;
+        ArrayList<Quiz> res = new ArrayList<Quiz>();
+        String query = "SELECT * FROM quizzes WHERE author_id = ?";
+        if(maxNumber==-1){
+            query += " LIMIT maxNumber";
+        }
+        try{
+            con = pool.getConnection();
+            stmt = con.createStatement();
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, user_id);
+            resultSet = preparedStatement.executeQuery();
+            while(resultSet.next()){
+                res.add(fetchQuiz());
+            }
+        }catch (SQLException e){
+            if(con != null) try {
+                // Returns the connection to the pool.
+                con.close();
+            } catch (Exception ignored) {
+            }
+        }
+        return res;
     }
     public synchronized List<Quiz> getQuizzes(){
         con = null;
