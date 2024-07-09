@@ -35,6 +35,8 @@ function addQuestion() {
         questionInput.placeholder = 'Enter your question here';
         questionInput.name = `question-${questionCount}`;
 
+        questionInput.required = true;
+
         questionBlock.appendChild(questionInput);
     }
     const questionTypeInput = document.createElement('input');
@@ -53,6 +55,7 @@ function addQuestion() {
         imageUrlInput.type = 'url';
         imageUrlInput.placeholder = 'Enter image URL';
         imageUrlInput.name = `question-${questionCount}-image-url`;
+        imageUrlInput.required = true;
         questionBlock.appendChild(imageUrlInput);
     } else if (questionType === 'fill in the blank') {
         // No additional fields needed for fill-in-the-blank
@@ -84,6 +87,7 @@ function addQuestion() {
         answerInput.type = 'text';
         answerInput.placeholder = 'Enter an answer choice';
         answerInput.name = `question-${currentQuestion}-choice-${answerCount}`;
+        answerInput.required = true;
 
         if (questionType === 'multiple-choice question') {
             const indexDiv = document.createElement('span');

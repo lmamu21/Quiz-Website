@@ -23,11 +23,25 @@ public class multiplePageQuizServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession();
+        for(String s : req.getParameterMap().keySet()){
+            String value = req.getParameter(s);
+            if(value != null){
+                System.out.println(s+": "+value);
+            }
+            else{
+                System.out.println(s+": ");
+            }
+        }
         Integer currentIndex = (Integer) session.getAttribute("currentIndex");
         Quiz quiz = (Quiz) session.getAttribute("quiz");
-
+        questions = quiz.getQuestions();
 
         if(currentIndex == null){
+            ArrayList<Quiz.QuizOptions> options = quiz.getQuizOptions();
+            if(options.contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION)){
+                session.setAttribute("immediate", true);
+            }
+            System.out.println("questions size: "+questions.size());
             ArrayList<Boolean> answered = new ArrayList<>(questions.size()); //initialized false by default
             ArrayList<Integer> marks = new ArrayList<>(questions.size());
             ArrayList<String> answers = new ArrayList<>(questions.size());
@@ -45,8 +59,8 @@ public class multiplePageQuizServlet extends HttpServlet {
             session.setAttribute("marks", marks);
             session.setAttribute("currentIndex", 0);
             session.setAttribute("answered", answered);
-            session.setAttribute("answers", new ArrayList<String>());
-
+            session.setAttribute("answers", answers);
+            session.setAttribute("showingMark", false);
             RequestDispatcher dispatcher = req.getRequestDispatcher("multiPageQuiz/question.jsp");
             dispatcher.forward(req, resp);
         }
@@ -64,11 +78,21 @@ public class multiplePageQuizServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         HttpSession session = req.getSession();
+        for(String s : req.getParameterMap().keySet()){
+            String value = req.getParameter(s);
+            if(value != null){
+                System.out.println(s+": "+value);
+            }
+            else{
+                System.out.println(s+": ");
+            }
+        }
         Integer currentIndex = (Integer)session.getAttribute("currentIndex");
         ArrayList<String>  responses = (ArrayList<String>) session.getAttribute("responses");
+
         if(req.getParameter("finish") == null){
             // user wants to take next question
-            if((Boolean)session.getAttribute("immediate")){
+            if(session.getAttribute("immediate")!=null && (Boolean)session.getAttribute("immediate")){
                 if(req.getParameter("submit") != null){
                     //show current score and then change button to next
                     ArrayList<Boolean> answered = (ArrayList<Boolean>) session.getAttribute("answered");

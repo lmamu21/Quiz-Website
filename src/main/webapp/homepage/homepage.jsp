@@ -18,7 +18,7 @@
         <div>
             <p> user : <%= (String) sess.getAttribute("username")%></p>
         </div>
-        <form action="Logout" method="post">
+        <form action="/Quiz_Web_war/Logout" method="post">
             <button type="submit" class="btn ">Logout</button>
         </form>
     </header>
@@ -42,10 +42,12 @@
                             ArrayList<Quiz> recents = (ArrayList<Quiz>) sess.getAttribute("recentQuizzes");
 
                         %>
-                        <% for(Quiz q : recents) {
-                            out.println("<td><a href=\" " + "/Quiz_Web_war/SummaryPage?quizId="+q.getQuizID()+ "\"> "+q.getQuizName()+"</a></td>");
 
-                        }%>
+                        <%
+                            for(Quiz q : recents) {
+                            out.println("<tr><td><a href=\" " + "/Quiz_Web_war/SummaryPage?quizId="+q.getQuizID()+ "\"> "+q.getQuizName()+"</a></td></tr>");
+                            }
+                        %>
                        </tbody>
                     </table>
             </div>

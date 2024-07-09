@@ -6,11 +6,10 @@
     Quiz quiz = (Quiz) request.getSession().getAttribute("quiz");
     IQuestion question = quiz.getQuestions().get(currentIndex);
     int totalQuestions = quiz.getQuestions().size();
-    boolean showingMark = session.getAttribute("showingMark") != null;
+    boolean showingMark = (Boolean)session.getAttribute("showingMark");
 %>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="Commons.Answer" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Commons.Interfaces.IQuestion" %>
 <%@ page import="Commons.Quiz" %>
@@ -45,7 +44,7 @@
         <%
             if(currentIndex!=totalQuestions-1){
                 if(showingMark){
-                    out.println("<label>Mark: "+session.getAttribute("mark")+"/"+question.getMark());
+                    out.println("<label>Mark: "+session.getAttribute("mark")+"/"+question.getMark()+"</label>");
                     out.println("<input type='submit' name='next' value='Next'>");
                 }else{
                     out.println("<input type='submit' name='submit' value='Submit'>");

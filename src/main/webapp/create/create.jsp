@@ -16,9 +16,9 @@
         <form id="quiz-creation-form" action="create" method="post">
             <div class="quiz-summary-wrapper">
                 <label for="quiz-name">Quiz name: </label>
-                <input type="text" name="quiz-name" id="quiz-name" placeholder="Name"><br>
+                <input type="text" name="quiz-name" id="quiz-name" placeholder="Name" required><br>
                 <label for="quiz-description">Quiz description: </label>
-                <input type="text" id="quiz-description" name="quiz-description" placeholder="Description"><br>
+                <input type="text" id="quiz-description" name="quiz-description" placeholder="Description" required><br>
 
                 <fieldset>
                     <legend>Choose how to show questions:</legend>

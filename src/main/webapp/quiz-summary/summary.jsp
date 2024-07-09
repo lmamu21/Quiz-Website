@@ -1,4 +1,5 @@
-<%--
+<%@ page import="Commons.QuizManager" %>
+<%@ page import="Commons.Quiz" %><%--
   Created by IntelliJ IDEA.
   User: luka
   Date: 17.06.24
@@ -60,15 +61,20 @@
                     <div class="stripe"></div>
                     <div class="post-content">
                         <p>Description of quiz</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur doloremque, ex fugiat iure minima nulla optio possimus qui voluptatibus. Dolore doloribus eius, error laborum minus nam nihil nobis reiciendis repellat?</p>
+                        <p><%
+                            int quiz_id = Integer.parseInt((String) session.getAttribute("quizId"));
+                            QuizManager manager = (QuizManager) application.getAttribute("QuizManager");
+                            Quiz quiz = manager.getQuizForWriting(quiz_id);
+                            out.println(quiz.getQuizDescription());
+                        %></p>
                     </div>
                 </div>
             </div>
-            <div class="footnote">
-               <a href="/Quiz_Web_war/singlePageQuiz">
-
-                   <button  class="btn">Start Quiz</button>
-               </a>
+            <div>
+                <form action="/Quiz_Web_war/takeQuiz" method="get">
+                   <input type="text" name="quizId" value="<%out.println(quiz_id); %>" hidden>
+                   <button class="btn" value="Start quiz">Start quiz</button>
+               </form>
             </div>
         </div>
 
@@ -98,11 +104,6 @@
                     </tr>
                 </table>
 
-               <form action="/takeQuiz" method="get">
-                   <input type="text" name="quiz_id" value="<% int quiz_id = Integer.parseInt((String) session.getAttribute("quizId"));
-                                                                out.println(quiz_id); %>" hidden>
-                   <button class="btn" value="Create quiz">Create quiz</button>
-               </form>
 
             </div>
         </div>

@@ -12,37 +12,45 @@
 <div class="container">
     <h1>Quiz Results</h1>
     <div class="user-info">
-        <p><strong>User:</strong> #სახელი</p>
+        <p><strong>User:</strong> <% out.println((String)session.getAttribute("username")); %></p>
         <p><strong>Score:</strong> 100 %</p>
         <p><strong>Points:</strong> 3 / 3</p>
-        <p><strong>Duration:</strong> 7 min 21s</p>
+        <p><strong>Duration:</strong> <%out.println((String)session.getAttribute("elapsedTime"));%></p>
     </div>
     <div class="answers">
         <h2>Answers</h2>
-        <div class="answer header">
-            <div class="header-item">Question</div>
-            <div class="header-item">Your Answer</div>
-            <div class="header-item">Correct Answer</div>
-        </div>
+        <table>
+            <thead>
+            <tr>
+                <td><div class="header-item">Question</div></td>
+                <td><div class="header-item">Your Answer</div></td>
+                <td><div class="header-item">Correct Answer</div></td>
+            </tr>
+            </thead>
+
+            <tbody>
         <%
             ArrayList<String> answers = (ArrayList<String>)session.getAttribute("answers");
             Quiz quiz = (Quiz) session.getAttribute("quiz");
             ArrayList<IQuestion> questions = quiz.getQuestions();
 
             for(int i = 0; i<questions.size(); i++) {
-                out.println("<div class='answer'>");
-                out.print("\t<div class='item'>");
-                out.println(i+"</div>");
-                out.print("\t<div class='item'>");
-                out.println(answers.get(i)+"</div>");
-                out.print("\t<div class='item'>");
+                out.println("<tr>");
+                out.println("<td>");
+                out.print("\t"+i+"</td>");
+                out.print("\t<td>"+answers.get(i)+"</td>");
+                out.print("\t<td>");
                 ArrayList<String> correctAnswers = questions.get(i).getCorrectAnswers();
                 for(String answer : correctAnswers) {
-                    out.print("<span>"+answer+"</span>");
+                    out.print("<p>"+answer+"</p>");
                 }
-                out.println("</div>");
+                out.println("</td>");
+                out.println("</tr>");
             }
         %>
+            </tbody>
+        </table>
+
     </div>
 </div>
 </body>

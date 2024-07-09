@@ -22,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @WebServlet("/singlePageQuiz")
 public class singlePageQuizServlet extends HttpServlet {
@@ -31,30 +32,46 @@ public class singlePageQuizServlet extends HttpServlet {
             throws ServletException, IOException {
         //TODO: must be changed
 
+        long finishTime = System.currentTimeMillis();
+        req.getSession().setAttribute("finishTime", finishTime);
+        long startTime = (long) req.getSession().getAttribute("startTime");
+        long elapsedTime = finishTime - startTime;
+
+        long hours = TimeUnit.MILLISECONDS.toHours(elapsedTime);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime) -
+                TimeUnit.HOURS.toMinutes(hours);
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTime) -
+                TimeUnit.HOURS.toSeconds(hours) -
+                TimeUnit.MINUTES.toSeconds(minutes);
+        long milliseconds = elapsedTime -
+                TimeUnit.HOURS.toMillis(hours) -
+                TimeUnit.MINUTES.toMillis(minutes) -
+                TimeUnit.SECONDS.toMillis(seconds);
+
+        // Format the elapsed time into a string
+        String elapsedTimeString = String.format(
+                "%02d: %02d:%02d.%03d",
+                hours, minutes, seconds, milliseconds);
+
+        req.getSession().setAttribute("elapsedTime", elapsedTimeString);
+
         Quiz quiz = (Quiz) req.getSession().getAttribute("quiz");
         ArrayList<IQuestion> questions = quiz.getQuestions();
-
+        ArrayList<String> answers = (ArrayList<String>) req.getSession().getAttribute("answers");
 
         //todo:redirect to the result page and store result
         res.setContentType("text/html");
-        PrintWriter out = res.getWriter();
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Hola</title>");
-        out.println("</head>");
-        out.println("<body bgcolor=\"white\">");
+
         for(int i = 0 ; i < questions.size() ; i ++) {
-            out.println("<h1>");
-            out.println(req.getParameter("" + (i + 1)));
-              out.println( questions.get(i).check(req.getParameter("" + questions.get(i).getIndex())));
-            out.println("</h1>");
+            String response =  req.getParameter(""+(i+1));
+            answers.set(i, response);
         }
 
+        req.getSession().setAttribute("answers", answers);
 
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher("result/result.jsp");
+        requestDispatcher.forward(req, res);
 
-
-        out.println("</body>");
-        out.println("</html>");
     }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
@@ -63,8 +80,14 @@ public class singlePageQuizServlet extends HttpServlet {
         QuizManager manager = (QuizManager) getServletContext().getAttribute("QuizManager");
         Quiz quiz = manager.getQuizForWriting(quiz_id);
         sess.setAttribute("quiz",quiz);
+        long startTime = System.currentTimeMillis();
+        sess.setAttribute("startTime", startTime);
+        ArrayList<String> answers = new ArrayList<>();
+        for(int i = 0 ; i<quiz.getQuestions().size(); i++ ){
+            answers.add(null);
+        }
 
-        
+        sess.setAttribute("answers", answers);
         RequestDispatcher dispatcher = req.getRequestDispatcher("/singlePageQuiz/singlePage.jsp");
         dispatcher.forward(req, resp);
     }
