@@ -1,0 +1,310 @@
+:root{
+    --sidebar: #222222
+}
+
+body{
+    background-color: #111;
+    color: white;
+
+}
+
+header{
+    width: 100%;
+    height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    text-align : center;
+}
+header div{
+    height: 50px;
+    width: 300px;
+    display: flex;
+    float : left;
+    font-size: 20px;
+}
+
+header form{
+    width: 300px;
+    height: 50px;
+    display: flex;
+    float : right;
+
+}
+header form button{
+    height: 100%;
+}
+
+.main-content{
+    min-width: 50%;
+    box-sizing: border-box;
+    border: 1px solid #444;
+    margin: 20px;
+    background-color: #333;
+    border-radius: 10px;
+    width: 50%;
+}
+
+
+
+.quizzes{
+    color: white;
+    border-style: solid;
+    border-color: #444;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.border-title{
+    font-size: large;
+    position: relative;
+    top: -0.5em;
+    margin-left: 1em;
+    display: inline;
+    background-color: var(--sidebar);
+    padding: 0.5em;
+}
+.quizzes-table{
+    width: 95%;
+    text-align: center;
+    background-color: #222;
+    color: white;
+    border-radius: 10px;
+    overflow: hidden; /* Ensure border-radius is applied */
+    border: solid #444 1px;
+    margin: 10px;
+}
+.quizzes-table th,
+.quizzes-table td {
+    padding: 12px 15px;
+}
+
+.quizzes-table thead {
+    background-color: #444;
+}
+
+.quizzes-table tr td{
+    border-radius: 10px;
+    border-style: hidden;
+}
+
+.quizzes-table tr {
+    border-bottom: 1px solid #444;
+    transition: background-color 0.3s ease;
+}
+.quizzes-table tr{
+    background-color: #333;
+}
+.quizzes-table tr:nth-of-type(even) {
+    background-color: #444;
+}
+
+.quizzes-table tr:last-of-type {
+    border-bottom: 2px solid #555;
+}
+
+.quizzes-table tr:hover {
+    background-color: #555;
+}
+
+.quizzes-table a {
+    color: cornflowerblue;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.quizzes-table a:hover {
+    text-decoration: underline;
+}
+
+.quizzes li{
+    margin-bottom: 10px;
+}
+
+.achievements{
+    color: white;
+    border-style:solid;
+    border-color: #444;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.flex{
+    display:flex;
+    flex-wrap: wrap;
+}
+.achievement{
+    display: flex;
+    margin: 5px;
+}
+.achievement div{
+    margin: 4px;
+}
+
+.label{
+    width: 15px; /* Set the width of the circle */
+    height: 15px; /* Set the height of the circle */
+    background-color: blueviolet; /* Set the background color of the circle */
+    border-radius: 50%; /* Make the element a circle */
+}
+
+.btn {
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    width:40%;
+    background-color: #238636;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn:hover{
+    background-color: #145a05;
+}
+.header-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border-bottom: solid 2px black;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 24px;
+    text-align: center;
+    flex-grow: 1;
+}
+
+.icons-container {
+    position: absolute;
+    right: 20px;
+    display: flex;
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+.icons-container {
+    position: absolute;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.icon-wrapper {
+    position: relative;
+}
+
+
+.hover-content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px); /* Position the hover content below the icon */
+    right: 0;
+    padding: 10px;
+    background-color: #222;
+    color: white;
+    border-radius: 5px;
+    white-space: nowrap;
+    text-align: center;
+    z-index: 1;
+
+}
+.icon-wrapper:hover .hover-content {
+    right: 0;
+    transform: translateX(25%);
+    display: block;
+}
+
+.message, .friend-request{
+    border: solid 1px #0e0b0b;
+    border-radius: 3px;
+    margin: 5px;
+    padding: 3px 10px;
+}
+
+.icon-wrapper:hover .hover-content,
+.hover-content:hover {
+    display: block;
+}
+
+.friend-request-btn{
+    width: 40%;
+    border: 1px solid #222;
+    border-radius: 5px;
+}
+
+.accept-button{
+    background-color: #238636;
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.accept-button:hover {
+    background-color: #145a05;
+}
+
+.reject-button{
+    background-color: #21262d;
+    color: #f85149;
+    border-color: #4e4e4e;
+}
+
+.reject-button:hover{
+    background-color: red;
+    color: white;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.feed {
+    width: 80%;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #1c1616;
+}
+
+.post {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+}
+.stripe {
+    width: 5%;
+    height: 100%;
+    background-color: #145a05;
+}
+
+.post:last-child {
+    border-bottom: none;
+}
+.announcement {
+    background-color: #9c8e8e;
+}
+.activity {
+    background-color: #2b2b2b;
+}
+.post-content {
+    flex: 1;
+    color: #ffffff; /* Adjust text color for visibility */
+}
+.post-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.link {
+    color: #1e90ff;
+    text-decoration: none;
+}
+.link:hover {
+    text-decoration: underline;
+}
