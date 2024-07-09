@@ -1,4 +1,4 @@
-package Commons;
+package Commons.Announcement;
 
 public class Announcement {
     private int announcementID;

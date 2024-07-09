@@ -1,4 +1,4 @@
-package Commons;
+package Commons.Achievement;
 
 import java.util.HashMap;
 import java.util.Map;

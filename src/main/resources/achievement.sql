@@ -1,4 +1,4 @@
-CREATE TABLE achievements (
+CREATE TABLE achievement (
     achievement_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     achievement_type INT,
