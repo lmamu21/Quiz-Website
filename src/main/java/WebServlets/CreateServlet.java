@@ -80,7 +80,7 @@ public class CreateServlet extends HttpServlet {
                 question = new MultipleChoiceQuestion(i, questionString, answers, correctAnswers, mark);
                 questions.add(question);
             }else if(typeString.equals("image-response")){
-                String url = request.getParameter("question-"+i+"-url");
+                String url = request.getParameter("question-"+i+"-image-url");
                 ArrayList<String> answers = new ArrayList<>();
 
                 int j = 1;
