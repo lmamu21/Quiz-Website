@@ -54,7 +54,7 @@ public class SummaryPageDAO {
                 con = pool.getConnection();
 
                 Statement statement = con.createStatement();
-            String query = "SELECT user_id FROM users WHERE user_id = (SELECT author_id FROM quizzes WHERE quiz_id = ?)";
+            String query = "SELECT user_id FROM users WHERE user_id = (SELECT creator FROM quizzes WHERE quiz_id = ?)";
             PreparedStatement pstmt = con.prepareStatement(query);
             pstmt.setString(1,quizId);
             ResultSet rs = pstmt.executeQuery();
