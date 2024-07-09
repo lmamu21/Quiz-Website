@@ -16,10 +16,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-
 import org.apache.tomcat.jdbc.pool.DataSource;
 
 import org.apache.tomcat.jdbc.pool.PoolProperties;
+
+import java.util.ArrayList;
 
 @WebListener
 public class Listener  implements ServletContextListener {
@@ -54,12 +55,15 @@ public class Listener  implements ServletContextListener {
             context.setAttribute("QuizManager",quizManager);
             context.setAttribute("AccountManager",accountManager);
 
+
         }catch (Exception e){
             e.printStackTrace();
         }
 
 
     }
+
+
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {

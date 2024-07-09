@@ -82,7 +82,7 @@ public class singlePageQuizServlet extends HttpServlet {
                 hours, minutes, seconds, milliseconds);
 
         sess.setAttribute("elapsedTime", elapsedTimeString);
-        AccountManager manager = (AccountManager) sess.getAttribute("AccountManager");
+        AccountManager manager = (AccountManager) req.getServletContext().getAttribute("AccountManager");
         String username = (String) sess.getAttribute("username");
         int user_id = 0;
         try {
@@ -115,7 +115,7 @@ public class singlePageQuizServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 //
-       
+
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("result/result.jsp");
         dispatcher.forward(req, res);
