@@ -43,52 +43,6 @@
                 out.println("</div>");
             }
         %>
-
-        <div class="answer">
-            <div class="item">#შეკითხვა1#?</div>
-            <div class="item">#პასუხი1#</div>
-            <div class="item">#სწორი პასუხი1#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა2#?</div>
-            <div class="item">#პასუხი2#</div>
-            <div class="item">#სწორი პასუხი2#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა3#?</div>
-            <div class="item">#პასუხი3#</div>
-            <div class="item">#სწორი პასუხი3#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა1#?</div>
-            <div class="item">#პასუხი1#</div>
-            <div class="item">#სწორი პასუხი1#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა2#?</div>
-            <div class="item">#პასუხი2#</div>
-            <div class="item">#სწორი პასუხი2#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა3#?</div>
-            <div class="item">#პასუხი3#</div>
-            <div class="item">#სწორი პასუხი3#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა1#?</div>
-            <div class="item">#პასუხი1#</div>
-            <div class="item">#სწორი პასუხი1#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა2#?</div>
-            <div class="item">#პასუხი2#</div>
-            <div class="item">#სწორი პასუხი2#</div>
-        </div>
-        <div class="answer">
-            <div class="item">#შეკითხვა3#?</div>
-            <div class="item">#პასუხი3#</div>
-            <div class="item">#სწორი პასუხი3#</div>
-        </div>
     </div>
 </div>
 </body>
