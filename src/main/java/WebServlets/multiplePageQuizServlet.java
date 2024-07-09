@@ -37,6 +37,7 @@ public class multiplePageQuizServlet extends HttpServlet {
         questions = quiz.getQuestions();
 
         if(currentIndex == null){
+            session.setAttribute("totalMark", 0);
             ArrayList<Quiz.QuizOptions> options = quiz.getQuizOptions();
             if(options.contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION)){
                 session.setAttribute("immediate", true);
@@ -96,6 +97,8 @@ public class multiplePageQuizServlet extends HttpServlet {
                 if(req.getParameter("submit") != null){
                     //show current score and then change button to next
                     ArrayList<Boolean> answered = (ArrayList<Boolean>) session.getAttribute("answered");
+                    int totalMark = (Integer) session.getAttribute("totalMark");
+
                     answered.set(currentIndex, true);
                     session.setAttribute("answered", answered);
                     session.setAttribute("showingMark", true);
@@ -108,7 +111,8 @@ public class multiplePageQuizServlet extends HttpServlet {
                     answers.set(currentIndex, userResponse);
                     session.setAttribute("answers", answers);
                     int mark = currentQuestion.check(userResponse);
-
+                    totalMark += mark;
+                    session.setAttribute("totalMark", totalMark);
                     session.setAttribute("mark", mark);
 
                     RequestDispatcher dispatcher = req.getRequestDispatcher("multiPageQuiz/question.jsp");

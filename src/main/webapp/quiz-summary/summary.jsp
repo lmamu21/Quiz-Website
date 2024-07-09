@@ -1,5 +1,5 @@
-<%@ page import="Commons.QuizManager" %>
-<%@ page import="Commons.Quiz" %><%--
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Commons.*" %><%--
   Created by IntelliJ IDEA.
   User: luka
   Date: 17.06.24
@@ -14,7 +14,9 @@
     <title>Homepage</title>
     <link rel="stylesheet" href="quiz-summary/summary.css">
 </head>
-
+<%
+    SummaryPageService summaryPageService = (SummaryPageService) application.getAttribute("SummaryPageService");
+%>
 <body>
     <!-- TODO
         1. hot link to creators user page
@@ -31,9 +33,19 @@
                 <table class="users-table">
                     <thead></thead>
                     <tbody>
-                        <tr><td>1</td><td><a>USER #1</a></td><td>49</td></tr>
-                        <tr><td>2</td><td><a>USER #5</a></td><td>49</td></tr>
-                        <tr><td>3</td><td><a>User #8</a></td><td>47</td></tr>
+                        <%
+                            int quiz_id = Integer.parseInt((String) session.getAttribute("quizId"));
+                            QuizManager manager = (QuizManager) application.getAttribute("QuizManager");
+                            Quiz quiz = manager.getQuizForWriting(quiz_id);
+                            ArrayList<QuizAttempt> attempts = (ArrayList<QuizAttempt>) summaryPageService.getHighestPerformersAllTime(quiz_id);
+                            AccountManager accountManager = (AccountManager) application.getAttribute("AccountManager");
+
+                            for (int i = 0; i<attempts.size(); i++) {
+                                int user_id = attempts.get(i).getUserId();
+                                String username = accountManager.getUsername(user_id);
+                                out.println("<tr><td>"+i+"</td><td><a>"+username+"</a></td><td>"+attempts.get(i).getPercentCorrect()+"</td></tr>");
+                            }
+                        %>
                     </tbody>
                 </table>
             </div>
@@ -43,9 +55,14 @@
                 <table class="users-table">
                     <thead></thead>
                     <tbody>
-                        <tr><td>1</td><td><a>user #1</a></td><td>40</td></tr>
-                        <tr><td>2</td><td><a>user #5</a></td><td>49</td></tr>
-                        <tr><td>3</td><td><a>user #8</a></td><td>38</td></tr>
+                    <%
+                            attempts = (ArrayList<QuizAttempt>) summaryPageService.getTopPerformersDaily(quiz_id);
+                            for (int i = 0; i<attempts.size(); i++) {
+                                int user_id = attempts.get(i).getUserId();
+                                String username = accountManager.getUsername(user_id);
+                                out.println("<tr><td>"+i+"</td><td><a>"+username+"</a></td><td>"+attempts.get(i).getPercentCorrect()+"</td></tr>");
+                            }
+                    %>
                     </tbody>
                 </table>
             </div>
@@ -62,9 +79,7 @@
                     <div class="post-content">
                         <p>Description of quiz</p>
                         <p><%
-                            int quiz_id = Integer.parseInt((String) session.getAttribute("quizId"));
-                            QuizManager manager = (QuizManager) application.getAttribute("QuizManager");
-                            Quiz quiz = manager.getQuizForWriting(quiz_id);
+
                             out.println(quiz.getQuizDescription());
                         %></p>
                     </div>

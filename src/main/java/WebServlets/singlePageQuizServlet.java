@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,9 +33,32 @@ public class singlePageQuizServlet extends HttpServlet {
             throws ServletException, IOException {
         //TODO: must be changed
 
+        Quiz quiz = (Quiz) req.getSession().getAttribute("quiz");
+        ArrayList<IQuestion> questions = quiz.getQuestions();
+        ArrayList<Integer> answersInt = new ArrayList<>();
+        BigDecimal totalMark = BigDecimal.ZERO;
+        ArrayList<String> userAnswers = new ArrayList<>();
+        for (int i = 0; i < questions.size(); i++) {
+//            out.println("<h1>");
+            String userAnswer = (String) req.getParameter("" + questions.get(i).getIndex());
+            System.out.println("UserAnswers: " + userAnswer);
+            userAnswers.add(userAnswer);
+            int questionMark = questions.get(i).check(req.getParameter("" + questions.get(i).getIndex()));
+            BigDecimal questionMarkBigDecimal = new BigDecimal(questionMark);
+            totalMark = totalMark.add(questionMarkBigDecimal);
+            answersInt.add(questionMark);
+        }
+        HttpSession sess = req.getSession();
+        sess.setAttribute("answers", userAnswers);
+        System.out.println(userAnswers.size());
+        sess.setAttribute("marksArrayList", answersInt);
+        sess.setAttribute("totalMark", totalMark);
+
         long finishTime = System.currentTimeMillis();
-        req.getSession().setAttribute("finishTime", finishTime);
-        long startTime = (long) req.getSession().getAttribute("startTime");
+
+        long startTime = (long) sess.getAttribute("startTime");
+
+
         long elapsedTime = finishTime - startTime;
 
         long hours = TimeUnit.MILLISECONDS.toHours(elapsedTime);
@@ -53,27 +77,35 @@ public class singlePageQuizServlet extends HttpServlet {
                 "%02d: %02d:%02d.%03d",
                 hours, minutes, seconds, milliseconds);
 
-        req.getSession().setAttribute("elapsedTime", elapsedTimeString);
+        sess.setAttribute("elapsedTime", elapsedTimeString);
 
-        Quiz quiz = (Quiz) req.getSession().getAttribute("quiz");
-        ArrayList<IQuestion> questions = quiz.getQuestions();
-        ArrayList<String> answers = (ArrayList<String>) req.getSession().getAttribute("answers");
-
-        //todo:redirect to the result page and store result
-        res.setContentType("text/html");
-
-        for(int i = 0 ; i < questions.size() ; i ++) {
-            String response =  req.getParameter(""+(i+1));
-            answers.set(i, response);
-        }
-
-        req.getSession().setAttribute("answers", answers);
-
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher("result/result.jsp");
-        requestDispatcher.forward(req, res);
-
+        RequestDispatcher dispatcher = req.getRequestDispatcher("result/result.jsp");
+        dispatcher.forward(req, res);
     }
+    //todo:redirect to the result page and store result
+//        res.setContentType("text/html");
+//        PrintWriter out = res.getWriter();
+//        out.println("<html>");
+//        out.println("<head>");
+//        out.println("<title>Hola</title>");
+//        out.println("</head>");
+//        out.println("<body bgcolor=\"white\">");
+    //for(int i = 0 ; i < questions.size() ; i ++) {
+//            out.println("<h1>");
+    // out.println(req.getParameter("" + (i + 1)));
+    // out.println( et(i).getIndex())));
 
+
+//            out.println("</h1>");
+//        }
+
+
+
+
+    //  out.println("</body>");
+    // out.println("</html>");
+    //}
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
         HttpSession sess = req.getSession();
         int quiz_id  = Integer.parseInt( (String)sess.getAttribute("quizId"));
@@ -82,12 +114,8 @@ public class singlePageQuizServlet extends HttpServlet {
         sess.setAttribute("quiz",quiz);
         long startTime = System.currentTimeMillis();
         sess.setAttribute("startTime", startTime);
-        ArrayList<String> answers = new ArrayList<>();
-        for(int i = 0 ; i<quiz.getQuestions().size(); i++ ){
-            answers.add(null);
-        }
 
-        sess.setAttribute("answers", answers);
+
         RequestDispatcher dispatcher = req.getRequestDispatcher("/singlePageQuiz/singlePage.jsp");
         dispatcher.forward(req, resp);
     }
