@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +38,7 @@ public class multiplePageQuizServlet extends HttpServlet {
         questions = quiz.getQuestions();
 
         if(currentIndex == null){
-            session.setAttribute("totalMark", 0);
+            session.setAttribute("totalMark", new BigDecimal(0));
             ArrayList<Quiz.QuizOptions> options = quiz.getQuizOptions();
             if(options.contains(Quiz.QuizOptions.IMMEDIATE_CORRECTION)){
                 session.setAttribute("immediate", true);
@@ -97,7 +98,7 @@ public class multiplePageQuizServlet extends HttpServlet {
                 if(req.getParameter("submit") != null){
                     //show current score and then change button to next
                     ArrayList<Boolean> answered = (ArrayList<Boolean>) session.getAttribute("answered");
-                    int totalMark = (Integer) session.getAttribute("totalMark");
+                    BigDecimal totalMark = (BigDecimal) session.getAttribute("totalMark");
 
                     answered.set(currentIndex, true);
                     session.setAttribute("answered", answered);
@@ -111,7 +112,8 @@ public class multiplePageQuizServlet extends HttpServlet {
                     answers.set(currentIndex, userResponse);
                     session.setAttribute("answers", answers);
                     int mark = currentQuestion.check(userResponse);
-                    totalMark += mark;
+                    BigDecimal markBigDecimal = new BigDecimal(mark);
+                    totalMark = totalMark.add(markBigDecimal);
                     session.setAttribute("totalMark", totalMark);
                     session.setAttribute("mark", mark);
 
