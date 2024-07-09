@@ -16,6 +16,37 @@ public class SummaryPageDAO {
         this.pool = pool;
         this.databaseName = databaseName;
     }
+
+    public ArrayList<QuizAttempt> getUsersQuizAttempts(int user_id){
+        Connection con = null;
+        ArrayList<QuizAttempt> quizAttempts = new ArrayList<>();
+        String query = "SELECT * FROM quiz_attempts WHERE user_id = ?";
+        try{
+            con = pool.getConnection();
+            Statement statement = con.createStatement();
+            PreparedStatement preparedStatement = con.prepareStatement(query);
+            preparedStatement.setInt(1, user_id);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                int attempt_id = rs.getInt("AttemptID");
+                int quiz_id = rs.getInt("QuizID");
+                Time time_taken = rs.getTime("TimeTaken");
+                BigDecimal decimal = rs.getBigDecimal("PercentCorrect");
+                QuizAttempt attempt = new QuizAttempt(attempt_id, quiz_id, user_id, null, time_taken, decimal);
+                quizAttempts.add(attempt);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        finally {
+            if (con != null) try {
+                con.close();
+            } catch (Exception ignored) {
+            }
+        }
+        return quizAttempts;
+    }
     public String getQuizDescription(int quizId) throws SQLException {
         Connection con = null;
         String description = null;

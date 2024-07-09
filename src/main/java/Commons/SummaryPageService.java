@@ -7,6 +7,7 @@ import Commons.QuizAttempt;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SummaryPageService {
@@ -15,7 +16,9 @@ public class SummaryPageService {
     public SummaryPageService(SummaryPageDAO summaryPageDAO) {
         this.summaryPageDAO = summaryPageDAO;
     }
-
+    public ArrayList<QuizAttempt> getUsersAttempts(int user_id){
+        return this.summaryPageDAO.getUsersQuizAttempts(user_id);
+    }
     public String getQuizDescription(int quizId) throws SQLException {
         return summaryPageDAO.getQuizDescription(quizId);
     }
