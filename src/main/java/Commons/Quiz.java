@@ -32,6 +32,15 @@ public class Quiz {
         IMMEDIATE_CORRECTION
     }
 
+    /**
+     * Constructor to initialize a Quiz object with all attributes.
+     * @param quizID The unique identifier for the quiz.
+     * @param quizOptions List of options/settings for the quiz.
+     * @param quizName The name of the quiz.
+     * @param quizDescription Text description of the quiz.
+     * @param creator The ID of the quiz creator.
+     * @param questions List of questions in the quiz.
+     */
     public Quiz(int quizID, ArrayList<QuizOptions> quizOptions, String quizName, String quizDescription, int creator,
                 ArrayList<IQuestion> questions) {
         this.quizID = quizID;
@@ -42,6 +51,13 @@ public class Quiz {
         this.creator = creator;
     }
 
+    /**
+     * Constructor to initialize a Quiz object with basic attributes.
+     * @param quizID The unique identifier for the quiz.
+     * @param quizName The name of the quiz.
+     * @param quizDescription Text description of the quiz.
+     * @param creator The ID of the quiz creator.
+     */
     public Quiz(int quizID, String quizName, String quizDescription, int creator){
         this.quizID = quizID;
         this.quizName = quizName;
@@ -49,35 +65,68 @@ public class Quiz {
         this.creator = creator;
     }
 
-
-
+    /**
+     * Retrieves the unique identifier for the quiz.
+     * @return The quiz ID.
+     */
     public int getQuizID() {
         return quizID;
     }
+
+    /**
+     * Retrieves the list of options/settings for the quiz.
+     * @return The list of quiz options.
+     */
     public ArrayList<QuizOptions> getQuizOptions() {
         return quizOptions;
     }
+
+    /**
+     * Retrieves the name of the quiz.
+     * @return The quiz name.
+     */
     public String getQuizName() {
         return quizName;
     }
+
+    /**
+     * Retrieves the text description of the quiz.
+     * @return The quiz description.
+     */
     public String getQuizDescription() {
         return quizDescription;
     }
+
+    /**
+     * Retrieves the ID of the quiz creator.
+     * @return The creator ID.
+     */
     public int getCreatorID() {
         return creator;
     }
 
+    /**
+     * Retrieves the list of questions in the quiz.
+     * @return The list of questions.
+     */
     public ArrayList<IQuestion> getQuestions() {
         return Questions;
     }
 
+    /**
+     * Sets the list of options/settings for the quiz.
+     * @param quizOptions The list of quiz options to set.
+     */
     public void setQuizOptions(ArrayList<QuizOptions> quizOptions) {
         this.quizOptions = quizOptions;
     }
 
+    /**
+     * Sets the list of questions in the quiz.
+     * @param questions The list of questions to set.
+     */
     public void setQuestions(ArrayList<IQuestion> questions) {
         Questions = new ArrayList<>(questions);
     }
-
 
 }
