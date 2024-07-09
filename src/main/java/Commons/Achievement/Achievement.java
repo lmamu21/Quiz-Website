@@ -1,3 +1,7 @@
+/**
+ * Represents an achievement earned by a user.
+ * Each achievement is associated with a specific user ID and award type.
+ */
 package Commons.Achievement;
 
 import java.util.HashMap;
@@ -14,6 +18,10 @@ public class Achievement {
 //    I am the Greatest — The user had the highest score on a quiz. Note, once earned this
 //    achievement does not go away if someone else later bests the high score.
 //    Practice Makes Perfect — The user took a quiz in practice mode.
+
+    /**
+     * Enum defining various types of achievements.
+     */
     public enum Award {
         AMATEUR_AUTHOR,
         PROLIFIC_AUTHOR,
@@ -23,6 +31,7 @@ public class Achievement {
         PRACTICE_MAKES_PERFECT
     }
 
+    // Mapping from Award enum to corresponding achievement text.
     private static final Map<Award, String> achievementTexts = new HashMap<>();
 
     static {
@@ -34,13 +43,32 @@ public class Achievement {
         achievementTexts.put(Award.PRACTICE_MAKES_PERFECT, "Practice Makes Perfect");
     }
 
+    /**
+     * Constructs an Achievement object with specified userID and award type.
+     * @param userID The user ID associated with the achievement.
+     * @param award The type of award earned.
+     */
     public Achievement(int userID, Award award) {
         this.userID = userID;
         this.award = award;
     }
 
+    /**
+     * Retrieves the user ID associated with this achievement.
+     * @return The user ID.
+     */
     public int getUserID() { return userID; }
+
+    /**
+     * Retrieves the type of award earned.
+     * @return The award type.
+     */
     public Award getAward() { return award; }
+
+    /**
+     * Retrieves the textual representation of the achievement.
+     * @return The textual representation of the achievement.
+     */
     public String getAchievement() {
         return achievementTexts.getOrDefault(award, "");
     }
