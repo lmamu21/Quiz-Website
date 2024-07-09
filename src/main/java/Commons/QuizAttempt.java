@@ -10,11 +10,11 @@ public class QuizAttempt {
     private int userId;
     private Timestamp attemptDate;
 
-    private Time timeTaken;
+    private long timeTaken;
     private BigDecimal percentCorrect;
 
 
-    public QuizAttempt(int attemptId, int quizId, int userId, Timestamp attemptDate, Time timeTaken, BigDecimal percentCorrect) {
+    public QuizAttempt(int attemptId, int quizId, int userId, Timestamp attemptDate, long timeTaken, BigDecimal percentCorrect) {
         this.attemptId = attemptId;
         this.quizId = quizId;
         this.userId = userId;
@@ -56,11 +56,11 @@ public class QuizAttempt {
         this.attemptDate = attemptDate;
     }
 
-    public Time getTimeTaken() {
+    public long getTimeTaken() {
         return timeTaken;
     }
 
-    public void setTimeTaken(Time timeTaken) {
+    public void setTimeTaken(long timeTaken) {
         this.timeTaken = timeTaken;
     }
 
@@ -93,7 +93,7 @@ public class QuizAttempt {
         return this.percentCorrect.compareTo(other.percentCorrect);
     }
 
-    public int compareByTimeTaken(QuizAttempt other) {
-        return this.timeTaken.compareTo(other.timeTaken);
-    }
+    //public int compareByTimeTaken(QuizAttempt other) {
+    //   return this.timeTaken.compareTo(other.timeTaken);
+    //}
 }

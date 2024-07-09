@@ -32,7 +32,7 @@
 
         <div class="sidebar left">
             <div class="popular quizzes">
-                <div class="border-title"><a href="/Quiz_Web_war/allQuizzes">Popular quizzes</a></div>
+                <div class="border-title"><a href="/Quiz_Web_war/popularQuizzes">Popular quizzes</a></div>
                <table class="quizzes-table">
                     <thead></thead>
                        <tbody>
@@ -133,7 +133,7 @@
 
         <div class="sidebar right">
             <div class="quizzes">
-                <div class="border-title">Recently taken quizzes</div>
+                <div class="border-title">Recently taken quizzes by You</div>
                 <table class="quizzes-table">
                     <thead></thead>
                     <tbody>
@@ -148,7 +148,7 @@
             </div>
 
             <div class="quizzes">
-                <div class="border-title">Recently created quizzes</div>
+                <div class="border-title">Recently created quizzes by You</div>
                 <table class="quizzes-table">
                    <tr>
                        <td>1</td>
