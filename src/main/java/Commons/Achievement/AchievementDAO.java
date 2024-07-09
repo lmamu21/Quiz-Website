@@ -1,3 +1,7 @@
+/**
+ * Data Access Object (DAO) for managing achievements in the database.
+ * Provides methods to create, retrieve, and manage achievements for users.
+ */
 package Commons.Achievement;
 
 import Commons.Announcement.Announcement;
@@ -11,14 +15,28 @@ import java.util.ArrayList;
 
 public class AchievementDAO {
 
+    // DataSource for managing database connections.
     private DataSource pool;
+    // Name of the database being accessed.
     private String databaseName;
 
+    /**
+     * Constructor for AchievementDAO.
+     * @param pool The DataSource to obtain database connections.
+     * @param databaseName The name of the database to access.
+     */
     public AchievementDAO(DataSource pool, String databaseName) {
         this.pool = pool;
         this.databaseName = databaseName;
     }
 
+    /**
+     * Creates a new achievement for a user and inserts it into the database.
+     * @param userID The ID of the user earning the achievement.
+     * @param award The type of achievement being earned.
+     * @return The created Achievement object.
+     * @throws SQLException If an SQL exception occurs.
+     */
     public Achievement createAchievement(int userID, Achievement.Award award) throws SQLException {
         Connection con = null;
         String query = String.format("INSERT INTO achievements (user_id, achievement_type) VALUES (\'%s\', \'%s\')", userID, award);
@@ -28,6 +46,12 @@ public class AchievementDAO {
         return new Achievement(userID, award);
     }
 
+    /**
+     * Retrieves all achievements for a specific user from the database.
+     * @param userId The ID of the user whose achievements to retrieve.
+     * @return An ArrayList of Achievement objects earned by the user.
+     * @throws SQLException If an SQL exception occurs.
+     */
     public ArrayList<Achievement> getAchievements(int userId) throws SQLException {
         ArrayList<Achievement> achievement = new ArrayList<Achievement>();
 
@@ -54,6 +78,13 @@ public class AchievementDAO {
         return achievement;
     }
 
+
+    /**
+     * Checks and creates an achievement for creating a certain number of quizzes.
+     * @param userID The ID of the user to check achievements for.
+     * @return The created Achievement object if a new achievement is earned, otherwise null.
+     * @throws SQLException If an SQL exception occurs.
+     */
     public Achievement getCreatedQuizzesAchievement(int userID) throws SQLException {
         Connection con = null;
         try {
@@ -85,6 +116,12 @@ public class AchievementDAO {
         return null;
     }
 
+    /**
+     * Checks and creates an achievement for taking a certain number of quizzes.
+     * @param userID The ID of the user to check achievements for.
+     * @return The created Achievement object if a new achievement is earned, otherwise null.
+     * @throws SQLException If an SQL exception occurs.
+     */
     public Achievement getTakenQuizzesAchievement(int userID) throws SQLException {
         Connection con = null;
         try {
@@ -110,6 +147,13 @@ public class AchievementDAO {
         return null;
     }
 
+    /**
+     * Checks and creates an achievement for achieving the highest score on a quiz.
+     * @param userID The ID of the user to check achievements for.
+     * @param score The score achieved by the user.
+     * @return The created Achievement object if a new achievement is earned, otherwise null.
+     * @throws SQLException If an SQL exception occurs.
+     */
     public Achievement getHighestScoreAchievement(int userID, int score) throws SQLException {
 
         ArrayList<Achievement> achievements = getAchievements(userID);
