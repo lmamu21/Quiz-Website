@@ -138,7 +138,7 @@
                     </tbody>
                 </table>
 
-                <button class="btn" value="Take quiz">Take another quiz</button>
+                <button class="btn" value="Take quiz"><a href="/Quiz_Web_war/allQuizzes">Take another quiz</a></button>
             </div>
 
             <div class="quizzes">

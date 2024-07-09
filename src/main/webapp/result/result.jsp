@@ -1,6 +1,7 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="Commons.Quiz" %>
 <%@ page import="Commons.Interfaces.IQuestion" %>
+<%@ page import="java.math.BigDecimal" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,12 +12,7 @@
 <body>
 <div class="container">
     <h1>Quiz Results</h1>
-    <div class="user-info">
-        <p><strong>User:</strong> <% out.println((String)session.getAttribute("username")); %></p>
-        <p><strong>Score:</strong> 100 %</p>
-        <p><strong>Points:</strong> 3 / 3</p>
-        <p><strong>Duration:</strong> <%out.println((String)session.getAttribute("elapsedTime"));%></p>
-    </div>
+
     <div class="answers">
         <h2>Answers</h2>
         <table>
@@ -51,6 +47,15 @@
             </tbody>
         </table>
 
+    </div>
+    <div class="user-info">
+        <%
+            BigDecimal totalMark =  (BigDecimal)session.getAttribute("totalMark");
+            int maxMark = quiz.maxMark();
+        %>
+        <p><strong>User:</strong> <% out.println((String)session.getAttribute("username")); %></p>
+        <p><strong>Points:</strong> <%out.print(totalMark+"/"+maxMark);%></p>
+        <p><strong>Duration:</strong> <%out.println((String)session.getAttribute("elapsedTime"));%></p>
     </div>
     <div>
         <form action="homepage" method="get">
