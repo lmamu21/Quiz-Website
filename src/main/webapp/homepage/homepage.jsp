@@ -26,16 +26,8 @@
 
         <div class="sidebar left">
             <div class="popular quizzes">
-                <div class="border-title">Popular quizzes</div>
-                <table class="quizzes-table">
-                    <thead></thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <div class="recently-created quizzes">
-                <div class="border-title">Recently created quizzes</div>
-                <table class="quizzes-table">
+                <div class="border-title"><a href="/Quiz_Web_war/allQuizzes">Popular quizzes</a></div>
+               <table class="quizzes-table">
                     <thead></thead>
                        <tbody>
                         <%
@@ -43,6 +35,19 @@
 
                         %>
 
+                        <%
+                            for(Quiz q : recents) {
+                            out.println("<tr><td><a href=\" " + "/Quiz_Web_war/SummaryPage?quizId="+q.getQuizID()+ "\"> "+q.getQuizName()+"</a></td></tr>");
+                            }
+                        %>
+                       </tbody>
+                    </table>
+            </div>
+            <div class="recently-created quizzes">
+                <div class="border-title"><a href="/Quiz_Web_war/allQuizzes">Recently created quizzes</a></div>
+                <table class="quizzes-table">
+                    <thead></thead>
+                       <tbody>
                         <%
                             for(Quiz q : recents) {
                             out.println("<tr><td><a href=\" " + "/Quiz_Web_war/SummaryPage?quizId="+q.getQuizID()+ "\"> "+q.getQuizName()+"</a></td></tr>");
@@ -108,12 +113,6 @@
                     <div class="stripe"></div>
                     <div class="post-content">
                         <p><a class="link">Jane Smith</a> created a new quiz <a href="quiz-2.html" class="link">"World Capitals"</a>.</p>
-                    </div>
-                </div>
-                <div class="post announcement">
-                    <div class="stripe"></div>
-                    <div class="post-content">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci architecto at consequatur corporis dignissimos distinctio laudantium maiores maxime molestias nesciunt nihil nisi quas ratione rem reprehenderit sint suscipit ullam, veniam!.</p>
                     </div>
                 </div>
                 <div class="post activity">

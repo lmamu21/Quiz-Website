@@ -1,6 +1,8 @@
 package WebServlets;
 
 import Commons.*;
+import Commons.Announcement.AnnouncementDAO;
+import Commons.Announcement.AnnouncementManager;
 import Commons.Dao.OptionDao;
 import Commons.Dao.QuestionDao;
 
@@ -44,7 +46,9 @@ public class Listener  implements ServletContextListener {
             OptionDao optionDao = new OptionDao(pool,DBInfo.MYSQL_DATABASE_NAME);
             QuizManager quizManager = new QuizManager(new QuizDao(pool,DBInfo.MYSQL_DATABASE_NAME,questionDao,optionDao));
             AccountManager accountManager  = new AccountManager(new AccountManagerDAO(pool,DBInfo.MYSQL_DATABASE_NAME));
-
+            AnnouncementDAO announcementDAO = new AnnouncementDAO(pool,DBInfo.MYSQL_DATABASE_NAME);
+            AnnouncementManager announcementManager = new AnnouncementManager(announcementDAO);
+            context.setAttribute("announcementManager", announcementManager);
             context.setAttribute("pool",pool);
             context.setAttribute("SummaryPageService", summaryPageService);
             context.setAttribute("QuizManager",quizManager);
