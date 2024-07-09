@@ -1,3 +1,5 @@
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="Commons.*" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,6 +40,26 @@
                 <div class="score">85%</div>
             </div>
         </div>
+        <%
+            String username= (String) session.getAttribute("username");
+            AccountManager manager = (AccountManager) application.getAttribute("AccountManager");
+            QuizManager quizManager = (QuizManager) application.getAttribute("QuizManager");
+
+            int user_id = Integer.parseInt(manager.getID(username));
+            SummaryPageService service = (SummaryPageService) application.getAttribute("SummaryPageService");
+            ArrayList< QuizAttempt> attempts = service.getUsersAttempts(user_id);
+            
+            for(QuizAttempt attempt : attempts) {
+                Quiz quiz = quizManager.getQuiz(attempt.getQuizId());
+                out.println("<div class='quiz'>");
+                out.println("<h3>"+quiz.getQuizName()+"</h3>");
+                out.println("<div class='performance'>");
+                out.println("<div class=\"date\">"+ attempt.getAttemptDate()+ "</div>");
+                out.println("<div class=\"score\">" + attempt.getPercentCorrect() + "</div>");
+                out.println("</div>");
+            }
+
+        %>
     </section>
 </main>
 </body>

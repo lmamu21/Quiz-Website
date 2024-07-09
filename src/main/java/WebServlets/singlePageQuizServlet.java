@@ -1,15 +1,14 @@
 package WebServlets;
 
-import Commons.AccountManager;
+import Commons.*;
 import Commons.Interfaces.IQuestion;
 import Commons.Questions.FillTheBlankQuestion;
 import Commons.Questions.MultipleChoiceQuestion;
 import Commons.Questions.PictureResponseQuestion;
 import Commons.Questions.QuestionResponseQuestion;
-import Commons.Quiz;
-import Commons.QuizManager;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,6 +19,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -78,6 +82,46 @@ public class singlePageQuizServlet extends HttpServlet {
                 hours, minutes, seconds, milliseconds);
 
         sess.setAttribute("elapsedTime", elapsedTimeString);
+        AccountManager manager = (AccountManager) sess.getAttribute("AccountManager");
+        String username = (String) sess.getAttribute("username");
+        int user_id = 0;
+        try {
+             user_id = Integer.parseInt(manager.getID(username));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//
+//        LocalDateTime  startTime = (LocalDateTime) sess.getAttribute("startTime");
+//        LocalDateTime nowTmp = LocalDateTime.now();
+//        Duration duration = Duration.between(startTime,nowTmp);
+//        long timeTakenSeconds = duration.getSeconds();
+//        int quiz_id  = Integer.parseInt( (String)sess.getAttribute("quizId"));
+//
+//        Timestamp now = Timestamp.valueOf(nowTmp);
+//
+//
+//
+//        ServletContext sce = getServletContext();
+//        SummaryPageService summaryService =(SummaryPageService) sce.getAttribute("SummaryPageService");
+//        sess.setAttribute("timeTakenSeconds",timeTakenSeconds);
+//        totalMark =(BigDecimal) sess.getAttribute("totalMark");
+//
+//
+//        QuizAttempt attempt = new QuizAttempt(0,quiz_id,user_id,now,timeTakenSeconds,totalMark);
+
+//        try {
+//            summaryService.saveQuizAttempt(attempt);
+//        } catch (SQLException e) {
+//            throw new RuntimeException(e);
+//        }
+////
+//        QuizAttempt attempt = new QuizAttempt(0, quiz.getQuizID(), user_id, null, new Time(elapsedTime), totalMark);
+//        SummaryPageService service = (SummaryPageService) req.getServletContext().getAttribute("SummaryPageService");
+//        try {
+//            service.saveQuizAttempt(attempt);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         RequestDispatcher dispatcher = req.getRequestDispatcher("result/result.jsp");
         dispatcher.forward(req, res);

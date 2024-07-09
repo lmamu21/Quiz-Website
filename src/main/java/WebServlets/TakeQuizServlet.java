@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.ws.spi.http.HttpContext;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @WebServlet("/takeQuiz")
 public class TakeQuizServlet extends HttpServlet {
@@ -49,6 +51,7 @@ public class TakeQuizServlet extends HttpServlet {
         quiz.setQuestions(questions);
 
         long startTime = System.currentTimeMillis();
+        
         session.setAttribute("startTime", startTime);
 
         if(options.contains(Quiz.QuizOptions.ONE_PAGE)){

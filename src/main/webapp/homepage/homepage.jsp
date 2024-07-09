@@ -7,7 +7,6 @@
     <meta charset="UTF-8">
     <title>Homepage</title>
     <link rel="stylesheet" href="homepage/homepage.css">
-    <link rel="stylesheet" href="homepage.css">
 </head>
 
 <body>
@@ -18,9 +17,16 @@
         <div>
             <p> user : <%= (String) sess.getAttribute("username")%></p>
         </div>
+        <form action="/Quiz_Web_war/userpage" method="get">
+            <button type="submit" class="btn">User Page</button>
+        </form>
+        <form action="/Quiz_Web_war/history" method="get">
+            <button type="submit" class="btn">History</button>
+        </form>
         <form action="/Quiz_Web_war/Logout" method="post">
             <button type="submit" class="btn ">Logout</button>
         </form>
+
     </header>
     <div class="wrapper">
 
