@@ -15,6 +15,13 @@ public class Quiz {
 
     private ArrayList<IQuestion> Questions;
 
+    public int maxMark() {
+        int result = 0;
+        for (IQuestion question : Questions) {
+            result += question.getMark();
+        }
+        return result;
+    }
 
 
     //    Quiz Options
@@ -64,6 +71,8 @@ public class Quiz {
         this.quizDescription = quizDescription;
         this.creator = creator;
     }
+
+
 
     /**
      * Retrieves the unique identifier for the quiz.
