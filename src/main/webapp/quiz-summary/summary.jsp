@@ -99,8 +99,8 @@
                 </table>
 
                <form action="/takeQuiz" method="get">
-                   <input type="text" name="quiz_id" value="<%int quiz_id = (int) session.getAttribute("quiz_id");
-                                                                out.println(quiz_id)%>" hidden>
+                   <input type="text" name="quiz_id" value="<% int quiz_id = Integer.parseInt((String) session.getAttribute("quizId"));
+                                                                out.println(quiz_id); %>" hidden>
                    <button class="btn" value="Create quiz">Create quiz</button>
                </form>
 

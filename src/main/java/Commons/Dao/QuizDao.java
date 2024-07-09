@@ -66,7 +66,7 @@ public class QuizDao {
 
 
         } catch (SQLException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         } finally {
             if (con != null) try {
                 // Returns the connection to the pool.
@@ -90,7 +90,7 @@ public class QuizDao {
             stmt.close();
 
         } catch (SQLException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         } finally {
             if (con != null) try {
                 // Returns the connection to the pool.
@@ -118,7 +118,7 @@ public class QuizDao {
             }
             stmt.close();
         } catch (SQLException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         } finally {
             if (con != null) try {
                 // Returns the connection to the pool.
@@ -142,7 +142,7 @@ public class QuizDao {
             stmt.close();
 
         } catch (SQLException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         } finally {
             if (con != null) try {
                 // Returns the connection to the pool.
@@ -166,7 +166,7 @@ public class QuizDao {
             stmt.close();
 
         } catch (SQLException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         } finally {
             if (con != null) try {
                 // Returns the connection to the pool.
@@ -192,7 +192,7 @@ public class QuizDao {
 
 
         } catch (SQLException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         } finally {
             if (con != null) try {
                 // Returns the connection to the pool.
