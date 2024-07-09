@@ -28,7 +28,7 @@ function addQuestion() {
 
     questionBlock.appendChild(removeButton);
 
-    if (questionType === 'multiple-choice question' || questionType === 'question-response' || questionType === 'image-response question') {
+    if (questionType === 'multiple-choice question' || questionType === 'question-response' ) {
         const questionInput = document.createElement('input');
         questionInput.type = 'text';
         questionInput.className = 'question-text';
@@ -89,14 +89,14 @@ function addQuestion() {
             const indexDiv = document.createElement('span');
             indexDiv.textContent = String.fromCharCode(answerCount + 'A'.charCodeAt(0) - 1);
             questionBlock.insertBefore(indexDiv, addChoiceButton);
+
+
+            const correctChoiceCheckbox = document.createElement('input');
+            correctChoiceCheckbox.type = 'checkbox';
+            correctChoiceCheckbox.name = `question-${currentQuestion}-answer-${answerCount}-isCorrect`;
+            correctChoiceCheckbox.value = `question-${currentQuestion}-answer-${answerCount}-isCorrect`;
+            questionBlock.insertBefore(correctChoiceCheckbox, addChoiceButton);
         }
-
-        const correctChoiceCheckbox = document.createElement('input');
-        correctChoiceCheckbox.type = 'checkbox';
-        correctChoiceCheckbox.name = `question-${currentQuestion}-answer-${answerCount}-isCorrect`;
-        correctChoiceCheckbox.value = `question-${currentQuestion}-answer-${answerCount}-isCorrect`;
-        questionBlock.insertBefore(correctChoiceCheckbox, addChoiceButton);
-
         questionBlock.insertBefore(answerInput, addChoiceButton);
 
         answerChoices.set(currentQuestion, answerCount + 1); // Increment the answer count
