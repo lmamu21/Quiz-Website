@@ -24,18 +24,7 @@ CREATE TABLE friends (
 );
 
 
-CREATE TABLE quizzes (
-    quiz_id INT NOT NULL,
-    quiz_name varchar(254) NOT NULL,
-    quiz_description varchar(254),
-    author_id INT NOT NULL,
-    time_created DATETIME DEFAULT CURRENT_TIMESTAMP,
-    random_questions_option BOOLEAN DEFAULT FALSE,
-    page_options varchar(63) DEFAULT 'one-page',
-    immediate_correction BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (quiz_id),
-    FOREIGN KEY (author_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
+
 
 CREATE TABLE questions (
     question_id INT NOT NULL,
