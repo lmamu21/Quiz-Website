@@ -26,14 +26,14 @@ public class TakeQuizServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int quiz_id = Integer.parseInt(request.getParameter("quiz_id")); //hidden input on summary page.
+        int quiz_id = Integer.parseInt(request.getParameter("quizId")); //hidden input on summary page.
 
-        QuizManager quizManager = (QuizManager) getServletContext().getAttribute("quizManager"); //todo not real identifier
+        QuizManager quizManager = (QuizManager) getServletContext().getAttribute("QuizManager"); //todo not real identifier
 
         HttpSession session = request.getSession();
-        session.setAttribute("quiz", quizManager.getQuiz(quiz_id));
+        session.setAttribute("quiz", quizManager.getQuizForWriting(quiz_id));
 
-        Quiz quiz = quizManager.getQuiz(quiz_id);
+        Quiz quiz = quizManager.getQuizForWriting(quiz_id);
         ArrayList<Quiz.QuizOptions> options = quiz.getQuizOptions();
 
         ArrayList<IQuestion> questions = quiz.getQuestions();
@@ -52,12 +52,10 @@ public class TakeQuizServlet extends HttpServlet {
         session.setAttribute("startTime", startTime);
 
         if(options.contains(Quiz.QuizOptions.ONE_PAGE)){
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("//");
-            requestDispatcher.forward(request, response);
+            response.sendRedirect("/Quiz_Web_war/singlePageQuiz");
         }else{
             session.setAttribute("currentIndex", null);
-            RequestDispatcher requestDispatcher = request.getRequestDispatcher("/multiplePageQuiz");
-            requestDispatcher.forward(request, response);
+            response.sendRedirect("/Quiz_Web_war/multiplePageQuiz");
         }
 
     }

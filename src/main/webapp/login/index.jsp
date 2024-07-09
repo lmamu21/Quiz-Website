@@ -22,7 +22,7 @@
                 else
                     out.println("<h2> " + (String) sess.getAttribute("loginStatus") + " as " + sess.getAttribute("username") + "</h2>");
             }else{
-                out.println("<h2>Sign in to Quiz-Website</h2>");
+                out.println("<h2>Sign in to Hat-Trick Brain Teasers\n</h2>");
             }
         %>
     </div>

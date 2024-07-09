@@ -36,33 +36,7 @@ h2 {
     margin: 5px 0;
 }
 
-.answers {
-    max-width: 1300px;
-    margin: 0 auto;
-}
 
-.answer {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #444;
-    margin-bottom: 10px;
-}
-
-.answer.header {
-    font-weight: bold;
-    color: #FFD700;
-}
-
-.answer:last-child {
-    border-bottom: none;
-}
-
-.answer .item {
-    flex: 1;
-    text-align: center;
-    color: #fff;
-}
 
 .answer .header-item {
     flex: 1;
@@ -70,3 +44,35 @@ h2 {
     color: lime;
 }
 
+th,
+td {
+    padding: 12px 15px;
+}
+
+thead {
+   background-color: #444;
+}
+
+ tr td{
+    border-radius: 10px;
+    border-style: hidden;
+}
+
+tr {
+    border-bottom: 1px solid #444;
+    transition: background-color 0.3s ease;
+}
+ tr{
+    background-color: #333;
+}
+ tr:nth-of-type(even) {
+    background-color: #444;
+}
+
+ tr:last-of-type {
+    border-bottom: 2px solid #555;
+}
+
+ tr:hover {
+   background-color: #555;
+}
