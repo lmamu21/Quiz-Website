@@ -6,6 +6,7 @@ import Commons.Interfaces.IQuestion;
 import Commons.Quiz;
 import Commons.QuizManager;
 
+import javax.ejb.Local;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -51,7 +52,8 @@ public class TakeQuizServlet extends HttpServlet {
         quiz.setQuestions(questions);
 
         long startTime = System.currentTimeMillis();
-        
+        LocalDateTime startTimeTemp = LocalDateTime.now();
+        session.setAttribute("startTimeTemp",startTimeTemp);
         session.setAttribute("startTime", startTime);
 
         if(options.contains(Quiz.QuizOptions.ONE_PAGE)){

@@ -32,7 +32,7 @@ public class SummaryPageDAO {
                 int quiz_id = rs.getInt("QuizID");
                 Time time_taken = rs.getTime("TimeTaken");
                 BigDecimal decimal = rs.getBigDecimal("PercentCorrect");
-                QuizAttempt attempt = new QuizAttempt(attempt_id, quiz_id, user_id, null, time_taken, decimal);
+                QuizAttempt attempt = new QuizAttempt(attempt_id, quiz_id, user_id, null, time_taken.getTime(), decimal);
                 quizAttempts.add(attempt);
             }
 
@@ -155,7 +155,7 @@ public class SummaryPageDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 attempts.add(new QuizAttempt(rs.getInt("AttemptID"), rs.getInt("QuizID"), rs.getInt("UserID"),
-                        rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken"), rs.getBigDecimal("PercentCorrect")));
+                        rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken").getTime(), rs.getBigDecimal("PercentCorrect")));
             }
             rs.close();
             pstmt.close();
@@ -189,7 +189,7 @@ public class SummaryPageDAO {
             pstmt.setInt(1, attempt.getQuizId());
             pstmt.setInt(2, attempt.getUserId());
             pstmt.setTimestamp(3, attempt.getAttemptDate());
-            pstmt.setTime(4, attempt.getTimeTaken());
+            pstmt.setTime(4,new Time(attempt.getTimeTaken()));
             pstmt.setBigDecimal(5, attempt.getPercentCorrect());
             pstmt.executeUpdate();
             pstmt.close();
@@ -220,7 +220,7 @@ public class SummaryPageDAO {
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 attempts.add(new QuizAttempt(rs.getInt("AttemptID"), rs.getInt("QuizID"), rs.getInt("UserID"),
-                        rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken"), rs.getBigDecimal("PercentCorrect")));
+                        rs.getTimestamp("AttemptDate"), rs.getTime("TimeTaken").getTime(), rs.getBigDecimal("PercentCorrect")));
             }
             rs.close();
             pstmt.close();
@@ -255,7 +255,7 @@ public class SummaryPageDAO {
                        quizId,
                        rs.getInt("UserID"),
                        null, // AttemptDate is not relevant here
-                       null, // TimeTaken is not relevant here
+                       0, // TimeTaken is not relevant here
                        rs.getBigDecimal("BestScore")
                );
                attempts.add(attempt);
@@ -292,7 +292,7 @@ public class SummaryPageDAO {
                         quizId,
                         rs.getInt("UserID"),
                         null,
-                        null,
+0,
                         rs.getBigDecimal("BestScore")));
             }
             rs.close();
