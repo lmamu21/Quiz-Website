@@ -52,6 +52,13 @@
         </table>
 
     </div>
+    <div>
+        <form action="homepage" method="get">
+            <div class="btn">
+                <button type="submit" class="button">back to homepage</button>
+            </div>
+        </form>
+    </div>
 </div>
 </body>
 </html>
